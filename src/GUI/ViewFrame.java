@@ -33,12 +33,6 @@ public class ViewFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public ViewFrame() {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-				
-			}
-		});
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

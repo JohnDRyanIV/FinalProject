@@ -1,12 +1,12 @@
 package model;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
+
+import database.DBInfo;
 
 public class TicketHolder {
 	
@@ -15,6 +15,16 @@ public class TicketHolder {
 	
 	public int getNumTickets() {
 		return tickets.size();
+	}
+	
+	// returns ticket at index i in LinkedList tickets
+	public Ticket getTicket(int i) {
+		try {
+			return tickets.get(i);
+		} catch(IndexOutOfBoundsException e1) {
+			System.out.println(e1.getStackTrace());
+		}
+		return new Ticket();
 	}
 	
 	public String[] displayLineOnGraph(int id) {
@@ -46,9 +56,28 @@ public class TicketHolder {
 		// TODO
 	}
 	
-	// pull list from database
-	public void populateFromDB() {
+	// organize by problem
+	public void orgByProblem() {
 		// TODO
+	}
+	
+	// pull list from database
+	public void populateFromDB() throws SQLException {
+		DBInfo db = new DBInfo();
+		
+		Connection conn = db.connect();
+		Statement stm;
+		stm = conn.createStatement();
+		String SQL = "SELECT * FROM tickets";
+		ResultSet rst;
+		rst = stm.executeQuery(SQL);
+		while (rst.next()) {
+			Ticket ticket = new Ticket(rst.getInt("id"), rst.getString("DeviceName"), rst.getString("FirstName"), 
+									   rst.getString("LastName"), rst.getDate("Date").toLocalDate(), rst.getString("Problem"), rst.getString("Disassemble"));
+			tickets.add(ticket);
+		}
+
+
 	}
 	
 	// pull list from passed 2d string array
@@ -58,10 +87,11 @@ public class TicketHolder {
 		}
 	}
 	
-	// delete ticket based on its id
+	// delete ticket from database & tickets LinkedList based on its row (from the table)
 	public void deleteByRow(int row) {
 		for (int i = 0; i < tickets.size(); i++) {
 			if(tickets.get(i).getCurrentRow() == row) {
+				tickets.get(i).deleteTicket();
 				tickets.remove(i);
 			}
 		}

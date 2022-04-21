@@ -1,35 +1,28 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import model.Ticket;
-
-import javax.swing.JLabel;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.sql.Time;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import java.awt.Component;
+import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
-public class AddFrame extends JFrame {
+import inputValidation.TicketValidator;
+import model.Ticket;
 
+public class AddDialog extends JDialog {
+	
 	/**
 	 * 
 	 */
@@ -50,25 +43,24 @@ public class AddFrame extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AddFrame frame = new AddFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		try {
+			AddDialog dialog = new AddDialog();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
-	 * Create the frame.
+	 * Create the dialog.
 	 */
-	public AddFrame() {
-		
+	public AddDialog() {
+		super();
+		setModal(true);
+		this.setTitle("Add a Ticket");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 665, 384);
+		setBounds(100, 100, 665, 358);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -127,8 +119,11 @@ public class AddFrame extends JFrame {
 		
 		// repair step needs jeditor pane because it's longer than others
 		JEditorPane editRepairSteps = new JEditorPane();
-		editRepairSteps.setBounds(110, 126, 529, 146);
-		contentPane.add(editRepairSteps);
+		
+		// make jeditorpane scrollable
+		final JScrollPane editScrollPane = new JScrollPane(editRepairSteps);
+		editScrollPane.setBounds(110, 125, 529, 146);
+		contentPane.add(editScrollPane);
 		
 		//--- Error labels ---//
 		
@@ -160,7 +155,7 @@ public class AddFrame extends JFrame {
 		lblErrorRepairSteps.setVisible(false);
 		lblErrorRepairSteps.setVerticalAlignment(SwingConstants.TOP);
 		lblErrorRepairSteps.setForeground(Color.RED);
-		lblErrorRepairSteps.setBounds(282, 283, 357, 51);
+		lblErrorRepairSteps.setBounds(235, 282, 404, 23);
 		contentPane.add(lblErrorRepairSteps);
 		
 		// Adding error labels to a list for easy management
@@ -179,35 +174,57 @@ public class AddFrame extends JFrame {
 				addTicketClick(errorLabels, textFields, editRepairSteps);
 			}
 		});
-		btnAddTicket.setBounds(110, 283, 89, 23);
+		btnAddTicket.setBounds(110, 282, 115, 23);
 		contentPane.add(btnAddTicket);
 	}
 	
 	public void addTicketClick(List<JLabel> errorLabels, List<JTextField> textFields, JEditorPane repairSteps) {
+		TicketValidator tv = new TicketValidator();
 		setErrorLabelsInvisible(errorLabels);
+		boolean validInput = true;
+		// check fields in separate if statements so each error label can be checked 
+		if(!isValidDeviceName(textFields, errorLabels, tv))
+			validInput = false;
+		if(!isValidFirstName(textFields, errorLabels, tv))
+			validInput = false;
+		if(!isValidLastName(textFields, errorLabels, tv))
+			validInput = false;
+		if(!isValidProblem(textFields, errorLabels, tv))
+			validInput = false;
+		if(!isValidRepairSteps(repairSteps, errorLabels, tv))
+			validInput = false;
+		if(validInput) {
+			Ticket toAdd = new Ticket(textFields.get(DEVICE_NAME).getText(), textFields.get(FIRST_NAME).getText(), 
+					textFields.get(LAST_NAME).getText(), LocalDate.now(), textFields.get(PROBLEM).getText(), repairSteps.getText());
+			toAdd.insertTicket();	// add ticket to database
+		}
+		
+		
+
 		// if every field is valid
-		if(isValidDeviceName(textFields, errorLabels) && isValidFirstName(textFields, errorLabels) && isValidLastName(textFields, errorLabels)
-				&& isValidProblem(textFields, errorLabels) && isValidRepairSteps(repairSteps, errorLabels)) {
+		/*if(isValidDeviceName(textFields, errorLabels, tv) && isValidFirstName(textFields, errorLabels, tv) && isValidLastName(textFields, errorLabels, tv)
+				&& isValidProblem(textFields, errorLabels, tv) && isValidRepairSteps(repairSteps, errorLabels, tv)) {
 			// initialize ticket to be added to database
 			Ticket toAdd = new Ticket(textFields.get(DEVICE_NAME).getText(), textFields.get(FIRST_NAME).getText(), 
 					textFields.get(LAST_NAME).getText(), LocalDate.now(), textFields.get(PROBLEM).getText(), repairSteps.getText());
 			toAdd.insertTicket();	// add ticket to database
-			
-		}
+		}*/
 			
 	}
 	
-	public boolean isValidDeviceName(List<JTextField> textFields, List<JLabel> errorLabels) {
-		if(1 == 1) {
+	// below methods use a TicketValidator class to ensure that each field is valid & update error messages for every invalid field
+	
+	public boolean isValidDeviceName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
+		if(tv.isValidDeviceName(textFields.get(DEVICE_NAME).getText()))
 			return true;
-		}
+		// if false notify user with error label
 		errorLabels.get(DEVICE_NAME).setText("Invalid Device Name");
 		errorLabels.get(DEVICE_NAME).setVisible(true);
 		return false;
 	}
 	
-	public boolean isValidFirstName(List<JTextField> textFields, List<JLabel> errorLabels) {
-		if(true == true) {
+	public boolean isValidFirstName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
+		if(tv.isValidFirstName(textFields.get(FIRST_NAME).getText())) {
 			return true;
 		}
 		errorLabels.get(FIRST_NAME).setText("Invalid First Name");
@@ -215,8 +232,8 @@ public class AddFrame extends JFrame {
 		return false;
 	}
 	
-	public boolean isValidLastName(List<JTextField> textFields, List<JLabel> errorLabels) {
-		if(true == true) {
+	public boolean isValidLastName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
+		if(tv.isValidLastName(textFields.get(LAST_NAME).getText())) {
 			return true;
 		}
 		errorLabels.get(LAST_NAME).setText("Invalid Last Name");
@@ -224,8 +241,8 @@ public class AddFrame extends JFrame {
 		return false;
 	}
 	
-	public boolean isValidProblem(List<JTextField> textFields, List<JLabel> errorLabels) {
-		if(true == true) {
+	public boolean isValidProblem(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
+		if(tv.isValidProblem(textFields.get(PROBLEM).getText())) {
 			return true;
 		}
 		errorLabels.get(PROBLEM).setText("Invalid Problem");
@@ -233,11 +250,11 @@ public class AddFrame extends JFrame {
 		return false;
 	}
 	
-	public boolean isValidRepairSteps(JEditorPane repairSteps, List<JLabel> errorLabels) {
-		if(true == true) {
+	public boolean isValidRepairSteps(JEditorPane repairSteps, List<JLabel> errorLabels, TicketValidator tv) {
+		if(tv.isValidRepairSteps(repairSteps.getText())) {
 			return true;
 		}
-		errorLabels.get(REPAIR_STEPS).setText("Invalid Problem");
+		errorLabels.get(REPAIR_STEPS).setText("Invalid Repair Steps");
 		errorLabels.get(REPAIR_STEPS).setVisible(true);
 		return false;
 		
@@ -248,4 +265,5 @@ public class AddFrame extends JFrame {
 			errorLabels.get(i).setVisible(false);
 		}
 	}
+
 }

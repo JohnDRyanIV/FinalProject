@@ -1,34 +1,36 @@
 package GUI;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import model.TicketHolder;
 
 public class MainFrame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private AddFrame aFrame = new AddFrame();
+	private AddDialog aDialog = new AddDialog();
+	private ViewDialog vDialog = new ViewDialog();
 	private ViewFrame vFrame = new ViewFrame();
 	private JTable table;
 	private DefaultTableModel dTable;
 	
 	private TicketHolder tHolder = new TicketHolder();
 	// Initialize ticket holder here
-	String[][] tickets = { 
+	/*String[][] tickets = { 
 			{"A", "A", "A", "A"},
 			{"A", "A", "A", "A"},
 			{"A", "A", "A", "A"},
@@ -37,7 +39,7 @@ public class MainFrame extends JFrame {
 			{"A", "A", "A", "A"},
 			{"A", "A", "A", "A"},
 			{"A", "A", "A", "A"},
-	};
+	};*/
 
 	/**
 	 * Launch the application.
@@ -59,28 +61,40 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainFrame() {
-		setBounds(100, 100, 862, 632);
+		setBounds(100, 100, 1107, 648);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		tHolder.populateFromArray(tickets);
+		// tHolder.populateFromArray(tickets);
+
+		try {
+			tHolder.populateFromDB();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		
 		table = new JTable();
-		table.setBounds(15, 30, 672, 524);
-		getContentPane().add(table);
+		table.setDefaultEditor(Object.class, null);
+		final JScrollPane scrollTable = new JScrollPane(table);
+		scrollTable.setBounds(10, 11, 937, 587);
+		getContentPane().add(scrollTable);
 		
 		dTable = (DefaultTableModel) table.getModel();
 		dTable.addColumn("Device");
+		dTable.addColumn("Problem");
 		dTable.addColumn("First Name");
 		dTable.addColumn("Last Name");
 		dTable.addColumn("Date");
 		populateTable();
-
 		
+		//--- Labels ---//
 		
-		/**
-		 * Buttons & such
-		 */
+		JLabel lblOrganize = new JLabel("Organize by...");
+		lblOrganize.setBounds(957, 113, 127, 23);
+		getContentPane().add(lblOrganize);
+		
+		//--- Buttons ---//
+		
 		JButton btnAdd = new JButton("Add Ticket");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -88,18 +102,16 @@ public class MainFrame extends JFrame {
 				openAddWindow();
 			}
 		});
-		btnAdd.setBounds(708, 30, 102, 23);
+		btnAdd.setBounds(957, 11, 127, 23);
 		getContentPane().add(btnAdd);
 		
 		JButton btnDelete = new JButton("Delete Ticket");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(table.getSelectedRow());
-				tHolder.deleteByRow(table.getSelectedRow());
-				repopulateTable();
+				deleteTicket();
 			}
 		});
-		btnDelete.setBounds(708, 64, 102, 23);
+		btnDelete.setBounds(957, 45, 127, 23);
 		getContentPane().add(btnDelete);
 		
 		JButton btnView = new JButton("View Ticket");
@@ -109,32 +121,28 @@ public class MainFrame extends JFrame {
 				openViewWindow();
 			}
 		});
-		btnView.setBounds(708, 98, 102, 23);
+		btnView.setBounds(957, 79, 127, 23);
 		getContentPane().add(btnView);
 		
+		JButton btnDevice = new JButton("Device");
+		btnDevice.setBounds(957, 147, 127, 23);
+		getContentPane().add(btnDevice);
 		
-		//   TABLE LABELS   //
+		JButton btnFirstName = new JButton("First Name");
+		btnFirstName.setBounds(957, 181, 127, 23);
+		getContentPane().add(btnFirstName);
 		
-		JLabel lblDevice = new JLabel("Device");
-		lblDevice.setHorizontalAlignment(SwingConstants.LEFT);
-		lblDevice.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblDevice.setBounds(22, 4, 87, 23);
-		getContentPane().add(lblDevice);
+		JButton btnLastName = new JButton("Last Name");
+		btnLastName.setBounds(957, 215, 127, 23);
+		getContentPane().add(btnLastName);
 		
-		JLabel lblFirstName = new JLabel("First Name");
-		lblFirstName.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblFirstName.setBounds(187, -2, 102, 35);
-		getContentPane().add(lblFirstName);
+		JButton btnProblem = new JButton("Problem");
+		btnProblem.setBounds(957, 249, 127, 23);
+		getContentPane().add(btnProblem);
 		
-		JLabel lblLastName = new JLabel("Last Name\r\n");
-		lblLastName.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblLastName.setBounds(363, -6, 102, 43);
-		getContentPane().add(lblLastName);
-		
-		JLabel lblDate = new JLabel("Date");
-		lblDate.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblDate.setBounds(528, -2, 52, 35);
-		getContentPane().add(lblDate);
+		JButton btnDate = new JButton("Date");
+		btnDate.setBounds(957, 283, 127, 23);
+		getContentPane().add(btnDate);
 		table.updateUI();
 	}
 	
@@ -157,9 +165,24 @@ public class MainFrame extends JFrame {
 		System.out.println(tHolder.toString());
 	}
 	
+	private void deleteTicket() {
+		System.out.println(table.getSelectedRow());
+		tHolder.deleteByRow(table.getSelectedRow());
+		repopulateTable();
+	}
+	
 	private void openAddWindow() {
 		//this.setVisible(false);
-		aFrame.setVisible(true);
+		aDialog.setVisible(true);
+		tHolder = new TicketHolder();
+		try {
+			tHolder.populateFromDB();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("test");
+
 		repopulateTable();
 
 		// after aFrame is no longer showing
@@ -167,7 +190,6 @@ public class MainFrame extends JFrame {
 	}
 	
 	private void openViewWindow() {
-		vFrame.setVisible(true);
+		vDialog.setVisible(true);
 	}
-
 }
