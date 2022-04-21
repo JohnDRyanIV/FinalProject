@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -21,10 +20,8 @@ public class MainFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private AddDialog aDialog = new AddDialog();
 	private ViewDialog vDialog = new ViewDialog();
-	private ViewFrame vFrame = new ViewFrame();
 	private JTable table;
 	private DefaultTableModel dTable;
 	
@@ -153,8 +150,8 @@ public class MainFrame extends JFrame {
 		}
 	}
 	
+	// removes all rows from table
 	private void resetTable() {
-		int rowCount = dTable.getRowCount();
 		while(dTable.getRowCount() > 0)
 			dTable.removeRow(0);
 	}
@@ -165,8 +162,10 @@ public class MainFrame extends JFrame {
 		System.out.println(tHolder.toString());
 	}
 	
+	// deletes ticket from both database and ticketholder
 	private void deleteTicket() {
 		System.out.println(table.getSelectedRow());
+		System.out.println(table.getSelectedRows);
 		tHolder.deleteByRow(table.getSelectedRow());
 		repopulateTable();
 	}
@@ -178,10 +177,8 @@ public class MainFrame extends JFrame {
 		try {
 			tHolder.populateFromDB();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("test");
 
 		repopulateTable();
 

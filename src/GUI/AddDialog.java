@@ -182,7 +182,7 @@ public class AddDialog extends JDialog {
 		TicketValidator tv = new TicketValidator();
 		setErrorLabelsInvisible(errorLabels);
 		boolean validInput = true;
-		// check fields in separate if statements so each error label can be checked 
+		// check fields in separate if statements so each error label can be activated as needed
 		if(!isValidDeviceName(textFields, errorLabels, tv))
 			validInput = false;
 		if(!isValidFirstName(textFields, errorLabels, tv))
@@ -193,7 +193,7 @@ public class AddDialog extends JDialog {
 			validInput = false;
 		if(!isValidRepairSteps(repairSteps, errorLabels, tv))
 			validInput = false;
-		if(validInput) {
+		if(validInput) {	// if every field for ticket is valid, add ticket to database
 			Ticket toAdd = new Ticket(textFields.get(DEVICE_NAME).getText(), textFields.get(FIRST_NAME).getText(), 
 					textFields.get(LAST_NAME).getText(), LocalDate.now(), textFields.get(PROBLEM).getText(), repairSteps.getText());
 			toAdd.insertTicket();	// add ticket to database
@@ -214,6 +214,7 @@ public class AddDialog extends JDialog {
 	
 	// below methods use a TicketValidator class to ensure that each field is valid & update error messages for every invalid field
 	
+	// returns true if device name is valid, sets error labels & returns false if invalid
 	public boolean isValidDeviceName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
 		if(tv.isValidDeviceName(textFields.get(DEVICE_NAME).getText()))
 			return true;
@@ -223,6 +224,7 @@ public class AddDialog extends JDialog {
 		return false;
 	}
 	
+	// returns true if first name is valid, sets error labels & returns false if invalid
 	public boolean isValidFirstName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
 		if(tv.isValidFirstName(textFields.get(FIRST_NAME).getText())) {
 			return true;
@@ -232,6 +234,7 @@ public class AddDialog extends JDialog {
 		return false;
 	}
 	
+	// returns true if last name is valid, sets error labels & returns false if last name is invalid
 	public boolean isValidLastName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
 		if(tv.isValidLastName(textFields.get(LAST_NAME).getText())) {
 			return true;
@@ -241,6 +244,7 @@ public class AddDialog extends JDialog {
 		return false;
 	}
 	
+	// returns true if problem is valid, sets error labels & returns false is problem is invalid
 	public boolean isValidProblem(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
 		if(tv.isValidProblem(textFields.get(PROBLEM).getText())) {
 			return true;
@@ -250,6 +254,7 @@ public class AddDialog extends JDialog {
 		return false;
 	}
 	
+	// returns true if repair steps are valid, sets error labels & returns false if repair steps are invalid
 	public boolean isValidRepairSteps(JEditorPane repairSteps, List<JLabel> errorLabels, TicketValidator tv) {
 		if(tv.isValidRepairSteps(repairSteps.getText())) {
 			return true;
