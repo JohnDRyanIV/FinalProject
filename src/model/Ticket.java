@@ -33,20 +33,6 @@ public class Ticket {
 		lName = "DUMMY";
 	}
 	
-	// Constructor for initializing a ticket from an array
-	public Ticket(String[] content, int id) {
-		int length = content.length;
-		this.id = id;
-		currentRow = -1;
-		dName = content[0];
-		fName = content[1];
-		lName = content[2];
-		/*
-		for(int i = 3; i < length; i++) {
-			disassemble.add(content[i]);
-		}*/
-	}
-	
 	// CONSTRUCTOR FOR INITIALIZING A TICKET FROM DATABASE
 	public Ticket(int id, String dName, String fName, String lName, LocalDate date, String problem, String disassemble) {
 		this.id = id;
@@ -61,12 +47,21 @@ public class Ticket {
 	
 	// Constructor for creating a ticket to be pushed to database
 	public Ticket(String dName, String fName, String lName, LocalDate date, String problem, String disassemble) {
+		// id will be assigned automatically by database
 		setdName(dName);
 		setfName(fName);
 		setlName(lName);
 		setCreation(date);
 		setProblem(problem);
 		setDisassemble(disassemble);
+	}
+	
+	// converts string of disassemble from database to stack in ticket class
+	private void setDisassemble(String disassemble2) {
+		List<String> disassembleList = Arrays.asList(disassemble2.split("\r?\n|\r"));
+		for(int i = disassembleList.size() - 1; i > -1; i--) {
+			disassemble.push(disassembleList.get(i));
+		}
 	}
 
 	// inserts a ticket into the database
@@ -96,13 +91,11 @@ public class Ticket {
 	public void deleteTicket() {
 		DBInfo db = new DBInfo();
 		String SQL = "DELETE FROM tickets WHERE (id = ?)";
-		System.out.println(SQL);
 		
 		try {
 			Connection conn = db.connect();
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, Integer.toString(getId()));
-			System.out.println(pstmt.toString());
 			
 			pstmt.executeUpdate();
 			
@@ -110,24 +103,23 @@ public class Ticket {
 			System.out.println(ex.getMessage());
 		}
 	}
-	
-	// converts string of disassemble from database to stack in ticket class
-	private void setDisassemble(String disassemble2) {
-		// TODO Auto-generated method stub
-		List<String> disassembleList = Arrays.asList(disassemble2.split("\n"));
-		for(int i = disassembleList.size() - 1; i > -1; i--) {
-			disassemble.push(disassembleList.get(i));
-		}
-	}
 
 	// represents disassembling one more component by popping disassembly component into reassembly stack
 	public void incrementDisassemble() {
-		reassemble.add(disassemble.pop());
+		if(disassemble.size() > 0)
+			reassemble.add(disassemble.pop());
+		else
+			// TODO: Add exception for disassemble stack being empty
+			;
 	}
 	
 	// represents reassembling one more component by popping reassembly component into disassembly stack.
 	public void incrementReassemble() {
-		disassemble.add(reassemble.pop());
+		if(reassemble.size() > 0)
+			disassemble.add(reassemble.pop());
+		else
+			// TODO: Add exception for reassembly stack being empty
+			;
 	}
 
 	// Returns a list of all remaining entries in the disassemble stack

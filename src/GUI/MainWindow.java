@@ -1,6 +1,10 @@
 package GUI;
 
 import java.awt.EventQueue;
+import java.sql.SQLException;
+
+import model.Ticket;
+import model.TicketHolder;
 
 public class MainWindow {
 
@@ -8,8 +12,9 @@ public class MainWindow {
 
 	/**
 	 * Launch the application.
+	 * @throws SQLException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -20,6 +25,16 @@ public class MainWindow {
 				}
 			}
 		});
+		
+		/*TicketHolder th = new TicketHolder();
+		th.populateFromDB();
+		
+		Ticket local = th.getTicket(0);
+		String output = local.getDisassemble().toString();
+		System.out.println(output);
+		System.out.println(local.getDisassemble().size());
+		String output2 = local.printDisassembleSteps();
+		System.out.println(output2);*/
 	}
 
 	/**

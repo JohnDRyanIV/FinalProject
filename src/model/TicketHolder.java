@@ -80,13 +80,6 @@ public class TicketHolder {
 
 	}
 	
-	// pull list from passed 2d string array
-	public void populateFromArray(String[][] ticketList) {
-		for(int x = 0; x < ticketList.length; x++) {
-				tickets.add(new Ticket(ticketList[x], x));
-		}
-	}
-	
 	// delete ticket from database & tickets LinkedList based on its row (from the table)
 	public void deleteByRow(int row) {
 		for (int i = 0; i < tickets.size(); i++) {

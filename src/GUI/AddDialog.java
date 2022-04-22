@@ -3,6 +3,7 @@ package GUI;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,18 +198,8 @@ public class AddDialog extends JDialog {
 			Ticket toAdd = new Ticket(textFields.get(DEVICE_NAME).getText(), textFields.get(FIRST_NAME).getText(), 
 					textFields.get(LAST_NAME).getText(), LocalDate.now(), textFields.get(PROBLEM).getText(), repairSteps.getText());
 			toAdd.insertTicket();	// add ticket to database
+			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
-		
-		
-
-		// if every field is valid
-		/*if(isValidDeviceName(textFields, errorLabels, tv) && isValidFirstName(textFields, errorLabels, tv) && isValidLastName(textFields, errorLabels, tv)
-				&& isValidProblem(textFields, errorLabels, tv) && isValidRepairSteps(repairSteps, errorLabels, tv)) {
-			// initialize ticket to be added to database
-			Ticket toAdd = new Ticket(textFields.get(DEVICE_NAME).getText(), textFields.get(FIRST_NAME).getText(), 
-					textFields.get(LAST_NAME).getText(), LocalDate.now(), textFields.get(PROBLEM).getText(), repairSteps.getText());
-			toAdd.insertTicket();	// add ticket to database
-		}*/
 			
 	}
 	
@@ -261,8 +252,7 @@ public class AddDialog extends JDialog {
 		}
 		errorLabels.get(REPAIR_STEPS).setText("Invalid Repair Steps");
 		errorLabels.get(REPAIR_STEPS).setVisible(true);
-		return false;
-		
+		return false;	
 	}
 	
 	public void setErrorLabelsInvisible(List<JLabel> errorLabels) {

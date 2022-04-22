@@ -26,17 +26,6 @@ public class MainFrame extends JFrame {
 	private DefaultTableModel dTable;
 	
 	private TicketHolder tHolder = new TicketHolder();
-	// Initialize ticket holder here
-	/*String[][] tickets = { 
-			{"A", "A", "A", "A"},
-			{"A", "A", "A", "A"},
-			{"A", "A", "A", "A"},
-			{"A", "A", "A", "A"},
-			{"A", "A", "A", "A"},
-			{"A", "A", "A", "A"},
-			{"A", "A", "A", "A"},
-			{"A", "A", "A", "A"},
-	};*/
 
 	/**
 	 * Launch the application.
@@ -58,11 +47,10 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainFrame() {
+		this.setTitle("Ticket Manager");
 		setBounds(100, 100, 1107, 648);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
-		
-		// tHolder.populateFromArray(tickets);
 
 		try {
 			tHolder.populateFromDB();
@@ -165,28 +153,26 @@ public class MainFrame extends JFrame {
 	// deletes ticket from both database and ticketholder
 	private void deleteTicket() {
 		System.out.println(table.getSelectedRow());
-		System.out.println(table.getSelectedRows);
 		tHolder.deleteByRow(table.getSelectedRow());
 		repopulateTable();
 	}
 	
+	// opens window to add tickets then resets add window
 	private void openAddWindow() {
 		//this.setVisible(false);
 		aDialog.setVisible(true);
-		tHolder = new TicketHolder();
-		try {
-			tHolder.populateFromDB();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
+		aDialog = new AddDialog();
 		repopulateTable();
 
-		// after aFrame is no longer showing
-		//this.setVisible(true);
 	}
 	
+	// opens window to view tickets then resets view window
 	private void openViewWindow() {
-		vDialog.setVisible(true);
+		if(!table.getSelectionModel().isSelectionEmpty()) { // if any row on the table is selected
+			vDialog.setTicket(tHolder.getTicket(table.getSelectedRow()));
+			vDialog.setVisible(true);
+			vDialog = new ViewDialog();
+		}
+
 	}
 }
