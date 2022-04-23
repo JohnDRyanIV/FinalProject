@@ -3,6 +3,8 @@ package GUI;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -13,6 +15,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import model.TicketHolder;
+import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 
 public class MainFrame extends JFrame {
 
@@ -24,6 +29,7 @@ public class MainFrame extends JFrame {
 	private ViewDialog vDialog = new ViewDialog();
 	private JTable table;
 	private DefaultTableModel dTable;
+	private JCheckBox chckbxAscending = new JCheckBox("Ascending");
 	
 	private TicketHolder tHolder = new TicketHolder();
 
@@ -48,7 +54,7 @@ public class MainFrame extends JFrame {
 	 */
 	public MainFrame() {
 		this.setTitle("Ticket Manager");
-		setBounds(100, 100, 1107, 648);
+		setBounds(100, 100, 1114, 648);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 
@@ -71,12 +77,6 @@ public class MainFrame extends JFrame {
 		dTable.addColumn("Last Name");
 		dTable.addColumn("Date");
 		populateTable();
-		
-		//--- Labels ---//
-		
-		JLabel lblOrganize = new JLabel("Organize by...");
-		lblOrganize.setBounds(957, 113, 127, 23);
-		getContentPane().add(lblOrganize);
 		
 		//--- Buttons ---//
 		
@@ -102,40 +102,37 @@ public class MainFrame extends JFrame {
 		JButton btnView = new JButton("View Ticket");
 		btnView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO: Open frame with ticket info & two text fields representing assembly and disassembly stacks
 				openViewWindow();
 			}
 		});
 		btnView.setBounds(957, 79, 127, 23);
 		getContentPane().add(btnView);
 		
-		JButton btnDevice = new JButton("Device");
-		btnDevice.setBounds(957, 147, 127, 23);
-		getContentPane().add(btnDevice);
+		chckbxAscending.setBounds(971, 142, 97, 23);
+		chckbxAscending.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				repopulateTable();
+			}
+		});
+		getContentPane().add(chckbxAscending);
 		
-		JButton btnFirstName = new JButton("First Name");
-		btnFirstName.setBounds(957, 181, 127, 23);
-		getContentPane().add(btnFirstName);
-		
-		JButton btnLastName = new JButton("Last Name");
-		btnLastName.setBounds(957, 215, 127, 23);
-		getContentPane().add(btnLastName);
-		
-		JButton btnProblem = new JButton("Problem");
-		btnProblem.setBounds(957, 249, 127, 23);
-		getContentPane().add(btnProblem);
-		
-		JButton btnDate = new JButton("Date");
-		btnDate.setBounds(957, 283, 127, 23);
-		getContentPane().add(btnDate);
+		String[] comboOptions = {"Organize by...", "Device", "Problem", "First Name", "Last Name", "Date"};
+		JComboBox comboBoxOrganize = new JComboBox(comboOptions);
+		comboBoxOrganize.addItemListener(this::comboBoxItemStateChanged);
+		comboBoxOrganize.setBounds(957, 113, 127, 22);
+		getContentPane().add(comboBoxOrganize);
 		table.updateUI();
 	}
 	
 	// Populates the table with tickets
 	private void populateTable() { 
-		for(int i = 0; i < tHolder.getNumTickets(); i++) {
-			dTable.addRow(tHolder.displayLineOnGraph(i));
-		}
+		if(chckbxAscending.isSelected())
+			for(int i = tHolder.getNumTickets() - 1; i > -1; i--)
+				dTable.addRow(tHolder.displayLineOnGraphAscending(i));
+		else
+			for(int i = 0; i < tHolder.getNumTickets(); i++)
+				dTable.addRow(tHolder.displayLineOnGraphDescending(i));
 	}
 	
 	// removes all rows from table
@@ -157,9 +154,30 @@ public class MainFrame extends JFrame {
 		repopulateTable();
 	}
 	
+	public void comboBoxItemStateChanged(ItemEvent e) {
+	    if (e.getStateChange() == ItemEvent.SELECTED) {
+	        String selected = (String) e.getItem();
+	        if(selected == "Device")
+	        	tHolder.orgByDevice();
+	        else if(selected == "Problem")
+	        	tHolder.orgByProblem();
+	        else if(selected == "First Name")
+	        	tHolder.orgByFirst();
+	        else if(selected == "Last Name")
+	        	tHolder.orgByLast();
+	        else if(selected == "Date")
+	        	tHolder.orgByDate();
+	        repopulateTable();
+	    }
+	}
+	
+	public void checkBoxItemStateChange(ItemEvent e) {
+		if (e.getStateChange() == ItemEvent.SELECTED)
+			repopulateTable();
+	}
+	
 	// opens window to add tickets then resets add window
 	private void openAddWindow() {
-		//this.setVisible(false);
 		aDialog.setVisible(true);
 		aDialog = new AddDialog();
 		repopulateTable();

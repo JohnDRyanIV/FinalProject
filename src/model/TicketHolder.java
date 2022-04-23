@@ -27,8 +27,12 @@ public class TicketHolder {
 		return new Ticket();
 	}
 	
-	public String[] displayLineOnGraph(int id) {
+	public String[] displayLineOnGraphDescending(int id) {
 		return tickets.get(id).graphOutput(id);
+	}
+	
+	public String[] displayLineOnGraphAscending(int id) {
+		return tickets.get(id).graphOutput(tickets.size() - id - 1);
 	}
 	
 	@Override
@@ -38,27 +42,97 @@ public class TicketHolder {
 
 	// organize by date
 	public void orgByDate() {
-		//TODO
+		int n = tickets.size();
+		Ticket key;
+		for(int j = 1; j < n; j++) {
+			key = tickets.get(j);
+			int i = j - 1;
+			
+			while (i >= 0) {
+				if (key.getCreation().compareTo(tickets.get(i).getCreation()) < 0) {
+					break;
+				}
+				tickets.set(i+1, tickets.get(i));
+				i--;
+			}
+			tickets.set(i+1, key);
+		}
 	}
 	
 	// organize by device name
 	public void orgByDevice() {
-		// TODO
+		int n = tickets.size();
+		Ticket key;
+		for(int j = 1; j < n; j++) {
+			key = tickets.get(j);
+			int i = j - 1;
+			
+			while (i >= 0) {
+				if (key.getdName().compareTo(tickets.get(i).getdName()) < 0) {
+					break;
+				}
+				tickets.set(i+1, tickets.get(i));
+				i--;
+			}
+			tickets.set(i+1, key);
+		}
 	}
 	
 	// organize by first name
 	public void orgByFirst() {
-		// TODO
+		int n = tickets.size();
+		Ticket key;
+		for(int j = 1; j < n; j++) {
+			key = tickets.get(j);
+			int i = j - 1;
+			
+			while (i >= 0) {
+				if (key.getfName().compareTo(tickets.get(i).getfName()) < 0) {
+					break;
+				}
+				tickets.set(i+1, tickets.get(i));
+				i--;
+			}
+			tickets.set(i+1, key);
+		}
 	}
 	
 	// organize by last name
 	public void orgByLast() {
-		// TODO
+		int n = tickets.size();
+		Ticket key;
+		for(int j = 1; j < n; j++) {
+			key = tickets.get(j);
+			int i = j - 1;
+			
+			while (i >= 0) {
+				if (key.getlName().compareTo(tickets.get(i).getlName()) < 0) {
+					break;
+				}
+				tickets.set(i+1, tickets.get(i));
+				i--;
+			}
+			tickets.set(i+1, key);
+		}
 	}
 	
 	// organize by problem
 	public void orgByProblem() {
-		// TODO
+		int n = tickets.size();
+		Ticket key;
+		for(int j = 1; j < n; j++) {
+			key = tickets.get(j);
+			int i = j - 1;
+			
+			while (i >= 0) {
+				if (key.getProblem().compareTo(tickets.get(i).getProblem()) < 0) {
+					break;
+				}
+				tickets.set(i+1, tickets.get(i));
+				i--;
+			}
+			tickets.set(i+1, key);
+		}
 	}
 	
 	// pull list from database
