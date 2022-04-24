@@ -6,7 +6,6 @@ import model.Ticket;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
-import javax.swing.JList;
 import java.awt.Font;
 import javax.swing.JLabel;
 
@@ -47,7 +46,7 @@ public class ViewDialog extends JDialog {
 		this.setTitle("Viewing Ticket");
 		setBounds(100, 100, 798, 585);
 		getContentPane().setLayout(null);
-		
+		// set text areas so they can't be edited by users
 		textAreaDisassemble.setEditable(false);
 		textAreaReassemble.setEditable(false);
 		
