@@ -142,15 +142,15 @@ public class Ticket {
 		return reas;
 	}
 	
+	// returns a string array that will be used to output ticket information to a table in MainFrame
 	public String[] graphOutput(int currentRow) {
 		this.currentRow = currentRow;
 		String[] row = new String[8];
-		row[0] = dName;
-		row[1] = problem;
-		row[2] = fName;
-		row[3] = lName;
-		row[4] = creation.toString();
-		//row[3] = "blah";
+		row[0] = fName;
+		row[1] = lName;
+		row[2] = creation.toString();
+		row[3] = dName;
+		row[4] = problem;
 		return row;
 	}
 	
@@ -185,7 +185,7 @@ public class Ticket {
 	public String disassembleToDatabase() {
 		String disString = ""; // String that will be returned to database-friendly format
 		for(int i = disassemble.size() - 1; i > -1; i--) {
-			disString += disassemble.elementAt(i);
+			disString += disassemble.elementAt(i) + "\n";
 		}
 		return disString;
 
