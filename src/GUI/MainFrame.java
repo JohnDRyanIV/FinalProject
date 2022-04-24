@@ -71,11 +71,11 @@ public class MainFrame extends JFrame {
 		getContentPane().add(scrollTable);
 		
 		dTable = (DefaultTableModel) table.getModel();
-		dTable.addColumn("Device");
-		dTable.addColumn("Problem");
 		dTable.addColumn("First Name");
 		dTable.addColumn("Last Name");
 		dTable.addColumn("Date");
+		dTable.addColumn("Device");
+		dTable.addColumn("Problem");
 		populateTable();
 		
 		//--- Buttons ---//
@@ -84,7 +84,12 @@ public class MainFrame extends JFrame {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TODO: Open Add Ticket Frame & update table after frame is filled out
-				openAddWindow();
+				try {
+					openAddWindow();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnAdd.setBounds(957, 11, 127, 23);
@@ -125,6 +130,13 @@ public class MainFrame extends JFrame {
 		table.updateUI();
 	}
 	
+	// retrieves current row, with extra operations done if the table is ordered in ascending
+	private int getCurrentRow() {
+		if(chckbxAscending.isSelected()) {
+			return table.getRowCount() - table.getSelectedRow() - 1;
+		}
+		return table.getSelectedRow();
+	}
 	// Populates the table with tickets
 	private void populateTable() { 
 		if(chckbxAscending.isSelected())
@@ -149,8 +161,8 @@ public class MainFrame extends JFrame {
 	
 	// deletes ticket from both database and ticketholder
 	private void deleteTicket() {
-		System.out.println(table.getSelectedRow());
-		tHolder.deleteByRow(table.getSelectedRow());
+		System.out.println(getCurrentRow());
+		tHolder.deleteByRow(getCurrentRow());
 		repopulateTable();
 	}
 	
@@ -177,9 +189,10 @@ public class MainFrame extends JFrame {
 	}
 	
 	// opens window to add tickets then resets add window
-	private void openAddWindow() {
+	private void openAddWindow() throws SQLException {
 		aDialog.setVisible(true);
 		aDialog = new AddDialog();
+		tHolder.populateFromDB();
 		repopulateTable();
 
 	}
@@ -187,7 +200,7 @@ public class MainFrame extends JFrame {
 	// opens window to view tickets then resets view window
 	private void openViewWindow() {
 		if(!table.getSelectionModel().isSelectionEmpty()) { // if any row on the table is selected
-			vDialog.setTicket(tHolder.getTicket(table.getSelectedRow()));
+			vDialog.setTicket(tHolder.getTicket(getCurrentRow()));
 			vDialog.setVisible(true);
 			vDialog = new ViewDialog();
 		}

@@ -11,7 +11,7 @@ import database.DBInfo;
 public class TicketHolder {
 	
 	// Linked list holding every ticket
-	LinkedList<Ticket> tickets = new LinkedList<Ticket>();
+	private LinkedList<Ticket> tickets = new LinkedList<Ticket>();
 	
 	public int getNumTickets() {
 		return tickets.size();
@@ -68,7 +68,7 @@ public class TicketHolder {
 			int i = j - 1;
 			
 			while (i >= 0) {
-				if (key.getdName().compareTo(tickets.get(i).getdName()) < 0) {
+				if (key.getdName().toLowerCase().compareTo(tickets.get(i).getdName().toLowerCase()) < 0) {
 					break;
 				}
 				tickets.set(i+1, tickets.get(i));
@@ -87,7 +87,7 @@ public class TicketHolder {
 			int i = j - 1;
 			
 			while (i >= 0) {
-				if (key.getfName().compareTo(tickets.get(i).getfName()) < 0) {
+				if (key.getfName().toLowerCase().compareTo(tickets.get(i).getfName().toLowerCase()) < 0) {
 					break;
 				}
 				tickets.set(i+1, tickets.get(i));
@@ -106,7 +106,7 @@ public class TicketHolder {
 			int i = j - 1;
 			
 			while (i >= 0) {
-				if (key.getlName().compareTo(tickets.get(i).getlName()) < 0) {
+				if (key.getlName().toLowerCase().compareTo(tickets.get(i).getlName().toLowerCase()) < 0) {
 					break;
 				}
 				tickets.set(i+1, tickets.get(i));
@@ -125,7 +125,7 @@ public class TicketHolder {
 			int i = j - 1;
 			
 			while (i >= 0) {
-				if (key.getProblem().compareTo(tickets.get(i).getProblem()) < 0) {
+				if (key.getProblem().toLowerCase().compareTo(tickets.get(i).getProblem().toLowerCase()) < 0) {
 					break;
 				}
 				tickets.set(i+1, tickets.get(i));
@@ -137,8 +137,9 @@ public class TicketHolder {
 	
 	// pull list from database
 	public void populateFromDB() throws SQLException {
+		tickets.clear(); // clears any preexisting tickets
 		DBInfo db = new DBInfo();
-		
+
 		Connection conn = db.connect();
 		Statement stm;
 		stm = conn.createStatement();
