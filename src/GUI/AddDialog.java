@@ -29,10 +29,13 @@ public class AddDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtDeviceName;
-	private JTextField txtFirstName;
-	private JTextField txtLastName;
-	private JTextField txtProblem;
+	
+	List<JLabel> errorLabels = new ArrayList<JLabel>();	// List containing every error label
+	List<JTextField> textFields = new ArrayList<JTextField>(); // List containing every text area
+	// repair step field needs JEditorPane because it's longer than others & needs newline functionality
+	JEditorPane editRepairSteps = new JEditorPane();
+
+	TicketValidator tv = new TicketValidator(); // used to validate user inputs
 	
 	private final int DEVICE_NAME = 0; 	// location in array where device name elements are stored
 	private final int FIRST_NAME = 1;	// location in array where first name elements are stored
@@ -90,6 +93,10 @@ public class AddDialog extends JDialog {
 		contentPane.add(lblRepairSteps);
 		
 		//--- Textbox input fields ---//
+		JTextField txtDeviceName;
+		JTextField txtFirstName;
+		JTextField txtLastName;
+		JTextField txtProblem;
 		
 		txtDeviceName = new JTextField();
 		txtDeviceName.setBounds(110, 21, 319, 20);
@@ -112,14 +119,11 @@ public class AddDialog extends JDialog {
 		txtProblem.setColumns(10);
 		
 		// adding text fields to a list for easy management
-		List<JTextField> textFields = new ArrayList<JTextField>();
+
 		textFields.add(txtDeviceName);
 		textFields.add(txtFirstName);
 		textFields.add(txtLastName);
 		textFields.add(txtProblem);
-		
-		// repair step needs jeditor pane because it's longer than others
-		JEditorPane editRepairSteps = new JEditorPane();
 		
 		// make jeditorpane scrollable
 		final JScrollPane editScrollPane = new JScrollPane(editRepairSteps);
@@ -160,7 +164,6 @@ public class AddDialog extends JDialog {
 		contentPane.add(lblErrorRepairSteps);
 		
 		// Adding error labels to a list for easy management
-		List<JLabel> errorLabels = new ArrayList<JLabel>();
 		errorLabels.add(lblErrorDeviceName);
 		errorLabels.add(lblErrorFirstName);
 		errorLabels.add(lblErrorLastName);
@@ -172,41 +175,44 @@ public class AddDialog extends JDialog {
 		JButton btnAddTicket = new JButton("Add Ticket");
 		btnAddTicket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addTicketClick(errorLabels, textFields, editRepairSteps);
+				addTicketClick();
 			}
 		});
 		btnAddTicket.setBounds(110, 282, 115, 23);
 		contentPane.add(btnAddTicket);
 	}
 	
-	public void addTicketClick(List<JLabel> errorLabels, List<JTextField> textFields, JEditorPane repairSteps) {
-		TicketValidator tv = new TicketValidator();
-		setErrorLabelsInvisible(errorLabels);
+	/**
+	 * Checks if every field is valid and, if so, adds ticket to database & closes window.
+	 */
+	public void addTicketClick() {
+		setErrorLabelsInvisible();
 		boolean validInput = true;
 		// check fields in separate if statements so each error label can be activated as needed
-		if(!isValidDeviceName(textFields, errorLabels, tv))
+		if(!isValidDeviceName())
 			validInput = false;
-		if(!isValidFirstName(textFields, errorLabels, tv))
+		if(!isValidFirstName())
 			validInput = false;
-		if(!isValidLastName(textFields, errorLabels, tv))
+		if(!isValidLastName())
 			validInput = false;
-		if(!isValidProblem(textFields, errorLabels, tv))
+		if(!isValidProblem())
 			validInput = false;
-		if(!isValidRepairSteps(repairSteps, errorLabels, tv))
+		if(!isValidRepairSteps())
 			validInput = false;
 		if(validInput) {	// if every field for ticket is valid, add ticket to database
 			Ticket toAdd = new Ticket(textFields.get(DEVICE_NAME).getText(), textFields.get(FIRST_NAME).getText(), 
-					textFields.get(LAST_NAME).getText(), LocalDate.now(), textFields.get(PROBLEM).getText(), repairSteps.getText());
+					textFields.get(LAST_NAME).getText(), LocalDate.now(), textFields.get(PROBLEM).getText(), editRepairSteps.getText());
 			toAdd.insertTicket();	// add ticket to database
 			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
 			
 	}
 	
-	// below methods use a TicketValidator class to ensure that each field is valid & update error messages for every invalid field
-	
-	// returns true if device name is valid, sets error labels & returns false if invalid
-	public boolean isValidDeviceName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
+	/**
+	 * returns true if device name is valid, sets error labels & returns false if invalid
+	 * @return - Boolean representing if device name input is valid
+	 */
+	public boolean isValidDeviceName() {
 		if(tv.isValidDeviceName(textFields.get(DEVICE_NAME).getText()))
 			return true;
 		// if false notify user with error label
@@ -215,8 +221,11 @@ public class AddDialog extends JDialog {
 		return false;
 	}
 	
-	// returns true if first name is valid, sets error labels & returns false if invalid
-	public boolean isValidFirstName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
+	/**
+	 * returns true if first name is valid, sets error labels & returns false if invalid
+	 * @return - Boolean representing if first name is valid
+	 */
+	public boolean isValidFirstName() {
 		if(tv.isValidFirstName(textFields.get(FIRST_NAME).getText())) {
 			return true;
 		}
@@ -225,8 +234,11 @@ public class AddDialog extends JDialog {
 		return false;
 	}
 	
-	// returns true if last name is valid, sets error labels & returns false if last name is invalid
-	public boolean isValidLastName(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
+	/**
+	 * returns true if last name is valid, sets error labels & returns false if last name is invalid
+	 * @return - Boolean representing if last name is valid
+	 */
+	public boolean isValidLastName() {
 		if(tv.isValidLastName(textFields.get(LAST_NAME).getText())) {
 			return true;
 		}
@@ -235,8 +247,11 @@ public class AddDialog extends JDialog {
 		return false;
 	}
 	
-	// returns true if problem is valid, sets error labels & returns false is problem is invalid
-	public boolean isValidProblem(List<JTextField> textFields, List<JLabel> errorLabels, TicketValidator tv) {
+	/**
+	 * returns true if problem is valid, sets error labels & returns false is problem is invalid
+	 * @return - Boolean representing if problem is valid
+	 */
+	public boolean isValidProblem() {
 		if(tv.isValidProblem(textFields.get(PROBLEM).getText())) {
 			return true;
 		}
@@ -245,9 +260,12 @@ public class AddDialog extends JDialog {
 		return false;
 	}
 	
-	// returns true if repair steps are valid, sets error labels & returns false if repair steps are invalid
-	public boolean isValidRepairSteps(JEditorPane repairSteps, List<JLabel> errorLabels, TicketValidator tv) {
-		if(tv.isValidRepairSteps(repairSteps.getText())) {
+	/**
+	 * returns true if repair steps are valid, sets error labels & returns false if repair steps are invalid
+	 * @return - Boolean representing if repair steps are valid
+	 */
+	public boolean isValidRepairSteps() {
+		if(tv.isValidRepairSteps(editRepairSteps.getText())) {
 			return true;
 		}
 		errorLabels.get(REPAIR_STEPS).setText("Invalid Repair Steps");
@@ -255,7 +273,7 @@ public class AddDialog extends JDialog {
 		return false;	
 	}
 	
-	public void setErrorLabelsInvisible(List<JLabel> errorLabels) {
+	public void setErrorLabelsInvisible() {
 		for(int i = 0; i < errorLabels.size(); i++) {
 			errorLabels.get(i).setVisible(false);
 		}

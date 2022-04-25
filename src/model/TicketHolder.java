@@ -8,6 +8,13 @@ import java.util.LinkedList;
 
 import database.DBInfo;
 
+/**
+ * This class holds Ticket objects. It's where a LinkedList of tickets can be organized
+ * and it's also what handles string output to the graph. It can populate itself from a
+ * database of fields compatible with Ticket objects. It is what allows Tickets to be
+ * viewed or deleted from the database using the graph in MainFrame.
+ * @author John Ryan
+ */
 public class TicketHolder {
 	
 	// Linked list holding every ticket
@@ -17,7 +24,11 @@ public class TicketHolder {
 		return tickets.size();
 	}
 	
-	// returns ticket at index i in LinkedList tickets
+	/**
+	 * Returns the ticket at index i
+	 * @param i - index of ticket being returned
+	 * @return returns ticket at index i
+	 */
 	public Ticket getTicket(int i) {
 		try {
 			return tickets.get(i);
@@ -27,12 +38,24 @@ public class TicketHolder {
 		return new Ticket();
 	}
 	
-	public String[] displayLineOnGraphDescending(int id) {
-		return tickets.get(id).graphOutput(id);
+	/**
+	 * Returns a String array that is output to one row on a graph.
+	 * It is formatted such that row selected will be accurate in descending order.
+	 * @param i - index of ticket in LinkedList tickets to be displayed
+	 * @return - String array of what will be displayed in this row
+	 */
+	public String[] displayRowOnGraphDescending(int i) {
+		return tickets.get(i).graphOutput(i);
 	}
 	
-	public String[] displayLineOnGraphAscending(int id) {
-		return tickets.get(id).graphOutput(tickets.size() - id - 1);
+	/**
+	 * Returns a String array that is output to one row on a graph.
+	 * It is formatted such that row selected will be accurate in ascending order.
+	 * @param i - index of ticket in LinkedList tickets to be displayed
+	 * @return - String array of what will be displayed in this row
+	 */
+	public String[] displayRowOnGraphAscending(int i) {
+		return tickets.get(i).graphOutput(tickets.size() - i - 1);
 	}
 	
 	@Override
@@ -40,7 +63,9 @@ public class TicketHolder {
 		return "TicketHolder [tickets=" + tickets + "]";
 	}
 
-	// organize by date
+	/**
+	 * Organizes the LinkedList tickets by date using insertion sort
+	 */
 	public void orgByDate() {
 		int n = tickets.size();
 		Ticket key;
@@ -59,7 +84,9 @@ public class TicketHolder {
 		}
 	}
 	
-	// organize by device name
+	/**
+	 * Organizes the LinkedList tickets by device name using insertion sort
+	 */
 	public void orgByDevice() {
 		int n = tickets.size();
 		Ticket key;
@@ -78,7 +105,9 @@ public class TicketHolder {
 		}
 	}
 	
-	// organize by first name
+	/**
+	 * Organizes the LinkedList tickets by first name using insertion sort
+	 */
 	public void orgByFirst() {
 		int n = tickets.size();
 		Ticket key;
@@ -97,7 +126,9 @@ public class TicketHolder {
 		}
 	}
 	
-	// organize by last name
+	/**
+	 * Organizes the LinkedList tickets by last name using insertion sort
+	 */
 	public void orgByLast() {
 		int n = tickets.size();
 		Ticket key;
@@ -116,7 +147,9 @@ public class TicketHolder {
 		}
 	}
 	
-	// organize by problem
+	/**
+	 * Organizes the LinkedList tickets by problem using insertion sort
+	 */
 	public void orgByProblem() {
 		int n = tickets.size();
 		Ticket key;
@@ -135,7 +168,10 @@ public class TicketHolder {
 		}
 	}
 	
-	// pull list from database
+	/**
+	 * Populates the LinkedList tickets from a database accessed with a DBInfo object
+	 * @throws SQLException - if DBInfo can't connect to database
+	 */
 	public void populateFromDB() throws SQLException {
 		tickets.clear(); // clears any preexisting tickets
 		DBInfo db = new DBInfo();
@@ -155,7 +191,10 @@ public class TicketHolder {
 
 	}
 	
-	// delete ticket from database & tickets LinkedList based on its row (from the table)
+	/**
+	 * Deletes Ticket from LinkedList tickets based on row variable of a Ticket
+	 * @param row - row variable of a Ticket.
+	 */
 	public void deleteByRow(int row) {
 		for (int i = 0; i < tickets.size(); i++) {
 			if(tickets.get(i).getCurrentRow() == row) {

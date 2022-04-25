@@ -130,42 +130,59 @@ public class MainFrame extends JFrame {
 		table.updateUI();
 	}
 	
-	// retrieves current row, with extra operations done if the table is ordered in ascending
+	/**
+	 * retrieves current row, with extra operations done if the table is ordered in ascending
+	 * @return - int representing currently selected row
+	 */
 	private int getCurrentRow() {
 		if(chckbxAscending.isSelected()) {
 			return table.getRowCount() - table.getSelectedRow() - 1;
 		}
 		return table.getSelectedRow();
 	}
-	// Populates the table with tickets
+	
+	/**
+	 * Populates the table with Ticket objects contained in TicketHolder.
+	 */
 	private void populateTable() { 
 		if(chckbxAscending.isSelected())
 			for(int i = tHolder.getNumTickets() - 1; i > -1; i--)
-				dTable.addRow(tHolder.displayLineOnGraphAscending(i));
+				dTable.addRow(tHolder.displayRowOnGraphAscending(i));
 		else
 			for(int i = 0; i < tHolder.getNumTickets(); i++)
-				dTable.addRow(tHolder.displayLineOnGraphDescending(i));
+				dTable.addRow(tHolder.displayRowOnGraphDescending(i));
 	}
 	
-	// removes all rows from table
+	/**
+	 * removes all rows from table
+	 */
 	private void resetTable() {
 		while(dTable.getRowCount() > 0)
 			dTable.removeRow(0);
 	}
 	
+	/**
+	 * Removes all rows & repopulates table with TicketObjects from TicketHolder.
+	 */
 	private void repopulateTable() {
 		resetTable();
 		populateTable();
 		System.out.println(tHolder.toString());
 	}
 	
-	// deletes ticket from both database and ticketholder
+	/**
+	 * deletes Ticket in currently selected row from both database and TicketHolder.
+	 */
 	private void deleteTicket() {
 		System.out.println(getCurrentRow());
 		tHolder.deleteByRow(getCurrentRow());
 		repopulateTable();
 	}
 	
+	/**
+	 * Listens to see if combo box has had a new option selected & reorganizes table if so
+	 * @param e - ItemEvent for combo box
+	 */
 	public void comboBoxItemStateChanged(ItemEvent e) {
 	    if (e.getStateChange() == ItemEvent.SELECTED) {
 	        String selected = (String) e.getItem();
@@ -183,12 +200,19 @@ public class MainFrame extends JFrame {
 	    }
 	}
 	
+	/**
+	 * Listens to see if check box ascending has been toggled & reorganizes table in ascending/descending order if so
+	 * @param e - ItemEvent for check box
+	 */
 	public void checkBoxItemStateChange(ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED)
 			repopulateTable();
 	}
 	
-	// opens window to add tickets then resets add window
+	/**
+	 * opens window to add tickets then resets add window
+	 * @throws SQLException - If tickets window can't connect to database
+	 */
 	private void openAddWindow() throws SQLException {
 		aDialog.setVisible(true);
 		aDialog = new AddDialog();
@@ -197,7 +221,9 @@ public class MainFrame extends JFrame {
 
 	}
 	
-	// opens window to view tickets then resets view window
+	/**
+	 * opens window to view tickets then resets view window
+	 */
 	private void openViewWindow() {
 		if(!table.getSelectionModel().isSelectionEmpty()) { // if any row on the table is selected
 			vDialog.setTicket(tHolder.getTicket(getCurrentRow()));

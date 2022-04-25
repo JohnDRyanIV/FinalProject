@@ -3,22 +3,30 @@ package inputValidation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class ensures that no input is invalid. For an input to be invalid, it needs
+ * to either be empty, or to contain more characters than the maximum number that
+ * can fit in its database field.
+ * @author John Ryan
+ */
 public class TicketValidator {
 	
-	// string of illegal characters for customer names. legal ones outside of A-z are '-.
-	private final String ILLEGAL_CHAR_CUSTNAME = "1234567890!@#$%^&*()_=+[{]}\\|;:\"<>/?";
-
 	// Lengths for these fields. Min lengths are set to ensure every field has information
-	private final int DEVICE_NAME_MAXLENGTH = 100;
 	private final int DEVICE_NAME_MINLENGTH = 1;
-	private final int FIRST_NAME_MAXLENGTH = 45;
+	private final int DEVICE_NAME_MAXLENGTH = 100;
+	
 	private final int FIRST_NAME_MINLENGTH = 1;
-	private final int LAST_NAME_MAXLENGTH = 45;
+	private final int FIRST_NAME_MAXLENGTH = 45;
+	
 	private final int LAST_NAME_MINLENGTH = 1;
-	private final int PROBLEM_MAXLENGTH = 100;
+	private final int LAST_NAME_MAXLENGTH = 45;
+	
 	private final int PROBLEM_MINLENGTH = 4;
-	private final int REPAIR_STEPS_MAXLENGTH = 10000;
+	private final int PROBLEM_MAXLENGTH = 100;
+	
 	private final int REPAIR_STEPS_MINLENGTH = 3;
+	private final int REPAIR_STEPS_MAXLENGTH = 10000;
+
 	
 	public TicketValidator() {
 		// empty cause all fields we need are final
@@ -33,20 +41,11 @@ public class TicketValidator {
 	public boolean isValidFirstName(String first) {
 		if (first.length() > FIRST_NAME_MAXLENGTH || first.length() < FIRST_NAME_MINLENGTH)
 			return false;
-		Pattern pattern = Pattern.compile(ILLEGAL_CHAR_CUSTNAME);
-		Matcher matcher = pattern.matcher(first);
-		if(matcher.find())	// if any illegal characters are found in customer name, name isn't valid
-			return false;
-		// if both checks failed, return true
 		return true;
 	}
 	
 	public boolean isValidLastName(String last) {
 		if (last.length() > LAST_NAME_MAXLENGTH || last.length() < LAST_NAME_MINLENGTH)
-			return false;
-		Pattern pattern = Pattern.compile(ILLEGAL_CHAR_CUSTNAME);
-		Matcher matcher = pattern.matcher(last);
-		if(matcher.find())	// if any illegal characters are found in customer name, name isn't valid
 			return false;
 		return true;
 	}

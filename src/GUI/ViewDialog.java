@@ -96,19 +96,29 @@ public class ViewDialog extends JDialog {
 		
 	}
 	
+	/**
+	 * Sets ticket in ViewDialog window before opening window.
+	 * @param ticket - ticket to be passed to ViewDialog
+	 */
 	public void setTicket(Ticket ticket) {
 		this.ticket = ticket;
-		updateTextFields();
+		updateTextAreas();
 		setLabels();
 	}
 	
-	public void updateTextFields() {
+	/**
+	 * Updates text areas in ViewDialog. Used after popping from one stack to another
+	 */
+	public void updateTextAreas() {
 		textAreaDisassemble.setText(ticket.printDisassembleSteps());
 		System.out.println(ticket.getDisassemble().toString());
 		textAreaReassemble.setText(ticket.printReassembleSteps());
 		System.out.println(ticket.getReassemble().toString());
 	}
 	
+	/**
+	 * Sets labels in ViewDialog. Used after setting Ticket object.
+	 */
 	public void setLabels() {
 		lblDeviceName.setText("Device: " + ticket.getdName());
 		lblProblem.setText("Problem: " + ticket.getProblem());
@@ -116,14 +126,20 @@ public class ViewDialog extends JDialog {
 		lblDate.setText("Created: " + ticket.getCreation().toString());
 	}
 	
+	/**
+	 * Calls ticket method that pops from disassemble stack into reassemble stack.
+	 */
 	public void incrementDisassemble() {
 		ticket.incrementDisassemble();
-		updateTextFields();
+		updateTextAreas();
 	}
 	
+	/**
+	 * Calls ticket method that pops from reassemble stack into disassemble stack.
+	 */
 	public void incrementReassemble() {
 		ticket.incrementReassemble();
-		updateTextFields();
+		updateTextAreas();
 	}
 	
 	public Ticket getTicket() {

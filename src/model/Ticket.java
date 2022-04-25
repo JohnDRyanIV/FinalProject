@@ -33,7 +33,16 @@ public class Ticket {
 		lName = "DUMMY";
 	}
 	
-	// CONSTRUCTOR FOR INITIALIZING A TICKET FROM DATABASE
+	/**
+	 * Constructs a Ticket from a database
+	 * @param id - id of ticket
+	 * @param dName - device name of ticket
+	 * @param fName - first name of ticket
+	 * @param lName - last name of ticket
+	 * @param date - date ticket was created
+	 * @param problem - problem attached to ticket
+	 * @param disassemble - stack containing assembly/disassembly steps for ticket
+	 */
 	public Ticket(int id, String dName, String fName, String lName, LocalDate date, String problem, String disassemble) {
 		this.id = id;
 		setdName(dName);
@@ -45,7 +54,15 @@ public class Ticket {
 		// OTHER METHODS TO CONVERT DATE AND DISASSEMBLY STRING INTO DATE AND STACK DATATYPES
 	}
 	
-	// Constructor for creating a ticket to be pushed to database
+	/**
+	 *  Constructor for creating a ticket to be pushed to database
+	 * @param dName - device name of ticket
+	 * @param fName - first name of ticket
+	 * @param lName - last name of ticket
+	 * @param date - date ticket was created
+	 * @param problem - problem attached to ticket
+	 * @param disassemble - stack containing assembly/disassembly steps for ticket
+	 */
 	public Ticket(String dName, String fName, String lName, LocalDate date, String problem, String disassemble) {
 		// id will be assigned automatically by database
 		setdName(dName);
@@ -56,7 +73,10 @@ public class Ticket {
 		setDisassemble(disassemble);
 	}
 	
-	// converts string of disassemble from database to stack in ticket class
+	/**
+	 * Converts the database String representing disassemble into a java Stack object
+	 * @param disassemble2 - the string to be converted into disassemble stack
+	 */
 	private void setDisassemble(String disassemble2) {
 		List<String> disassembleList = Arrays.asList(disassemble2.split("\r?\n|\r"));
 		for(int i = disassembleList.size() - 1; i > -1; i--) {
@@ -64,7 +84,9 @@ public class Ticket {
 		}
 	}
 
-	// inserts a ticket into the database
+	/**
+	 * Inserts a ticket into the database
+	 */
 	public void insertTicket() {
 		DBInfo db = new DBInfo();
 		String SQL = "INSERT INTO tickets(DeviceName, FirstName, LastName, Date, Problem, Disassemble) " + "VALUES(?,?,?,?,?,?)";
@@ -87,7 +109,9 @@ public class Ticket {
 
 	}
 	
-	// deletes a ticket from the database
+	/**
+	 * Deletes a ticket from the database
+	 */
 	public void deleteTicket() {
 		DBInfo db = new DBInfo();
 		String SQL = "DELETE FROM tickets WHERE (id = ?)";
@@ -104,45 +128,27 @@ public class Ticket {
 		}
 	}
 
-	// represents disassembling one more component by popping disassembly component into reassembly stack
+	/**
+	 * Represents disassembling one more component by popping disassemble component into reassemble stack
+	 */
 	public void incrementDisassemble() {
 		if(disassemble.size() > 0)
 			reassemble.add(disassemble.pop());
-		else
-			// TODO: Add exception for disassemble stack being empty
-			;
 	}
 	
-	// represents reassembling one more component by popping reassembly component into disassembly stack.
+	/** 
+	 * Represents reassembling one more component by popping reassemble component into disassemble stack
+	 */
 	public void incrementReassemble() {
 		if(reassemble.size() > 0)
 			disassemble.add(reassemble.pop());
-		else
-			// TODO: Add exception for reassembly stack being empty
-			;
-	}
-
-	// Returns a list of all remaining entries in the disassemble stack
-	public String disassemblePrint() {
-		String dis = null;
-		int size = disassemble.size();
-		for(int i = 0; i < size; i++) {
-			dis += disassemble.get(i) + "\n";
-		}
-		return dis;
-	}
-
-	// Returns a list of all remaining entries in the assemble stack
-	public String reassemblePrint() {
-		String reas = null;
-		int size = reassemble.size();
-		for(int i = 0; i < size; i++) {
-			reas += reassemble.get(i) + "\n";
-		}
-		return reas;
 	}
 	
-	// returns a string array that will be used to output ticket information to a table in MainFrame
+	/**
+	 * returns a string array that will be used to output ticket information to a table in MainFrame
+	 * @param currentRow - sets the row this ticket is placed in on the graph in MainFrame
+	 * @return - string array used to output ticket information to table in MainFrame
+	 */
 	public String[] graphOutput(int currentRow) {
 		this.currentRow = currentRow;
 		String[] row = new String[8];
@@ -154,7 +160,10 @@ public class Ticket {
 		return row;
 	}
 	
-	// output for view window disassembly steps
+	/**
+	 * Outputs a String of all remaining steps in disassemble stack in LIFO order. Used in ViewDialog
+	 * @return - String of remaining steps in disassemble stack in LIFO order.
+	 */
 	public String printDisassembleSteps() {
 		String disString = "";	// String that will be returned: lists every disassembly step remaining
 		String temp = ""; // where string is temporarily held while operations determining what text is output are performed on it
@@ -167,7 +176,10 @@ public class Ticket {
 		return disString;
 	}
 	
-	// output for view window assembly steps
+	/**
+	 * Outputs a String of all remaining steps in reassemble stack in LIFO order. Used in ViewDialog
+	 * @return - String of remaining steps in reassemble stack in LIFO order.
+	 */
 	public String printReassembleSteps() {
 		String reaString = ""; // string that will be returned: lists every assembly step remaining
 		String temp = ""; // where string is temporarily held while operations determining what text is output are performed on it
@@ -180,8 +192,9 @@ public class Ticket {
 		return reaString;
 	}
 	
-	// Converts the disassemble stack to a String so it can be more easily stored in a database
-	// Don't need one for reassemble, because contents of reassemble are contained in disassemble stack
+	/**
+	 * Converts disassemble stack to a String for storage in database.
+	 */
 	public String disassembleToDatabase() {
 		String disString = ""; // String that will be returned to database-friendly format
 		for(int i = disassemble.size() - 1; i > -1; i--) {
@@ -196,7 +209,7 @@ public class Ticket {
 	public int getId() {
 		return id;
 	}
-	// id should only be set upon initialization
+	// id should only be set in constructor
 
 	public int getCurrentRow() {
 		return currentRow;
