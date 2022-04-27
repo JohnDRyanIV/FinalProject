@@ -122,9 +122,16 @@ public class TicketValidatorTest {
 	void testIsValidProblemFalse() {
 		// ARRANGE
 		TicketValidator tv = new TicketValidator();
+		boolean actual1, actual2;
+		String input1 = "";
+		// Next string over 100 characters
+		String input2 = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
 		// ACT
-		
+		actual1 = tv.isValidProblem(input1);
+		actual2 = tv.isValidProblem(input2);
 		// ASSERT
+		assertFalse(actual1);
+		assertFalse(actual2);
 	}
 	
 	@Test
@@ -132,8 +139,15 @@ public class TicketValidatorTest {
 		// ARRANGE
 		TicketValidator tv = new TicketValidator();
 		boolean actual1, actual2;
+		String input1 = "a/";
+		String input2 = ""; // longer than 10000 characters
+		for(int i = 0; i <= 10000; i++)
+			input2 += "z";
 		// ACT
-		
+		actual1 = tv.isValidRepairSteps(input1);
+		actual2 = tv.isValidRepairSteps(input2);
 		// ASSERT
+		assertFalse(actual1);
+		assertFalse(actual2);
 	}
 }

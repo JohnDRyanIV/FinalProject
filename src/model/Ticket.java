@@ -1,16 +1,19 @@
 package model;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.time.LocalDate;
 
-import database.DBInfo;
+import java.time.LocalDate;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * This class holds a Ticket representing a set of information and instructions about
+ * a specific electronic device that is serviced to be repaired. This information includes
+ * a step by step description on how to disassemble the original product and reassemble the
+ * finished product.
+ * @author John Ryan
+ *
+ */
 public class Ticket {
 
 	private int id;			// id of ticket (primary key in database)
@@ -26,11 +29,21 @@ public class Ticket {
 	private Stack<String> disassemble = new Stack<String>();	// Stack containing disassembly steps
 	private Stack<String> reassemble = new Stack<String>();		// Stack containing assembly steps
 	
+	/**
+	 * Ticket constructor used for unit tests
+	 */
 	public Ticket() {
-		currentRow = -1;
-		dName = "DUMMY";
-		fName = "DUMMY";
-		lName = "DUMMY";
+		setdName("Acer G450 Predator");
+		setfName("Dylan");
+		setlName("Thomas");
+		setCreation(LocalDate.of(2020, 5, 15));
+		setProblem("Laptop won't boot");
+		String dis = 
+				  "Unscrew back/Rescrew back\n"
+				+ "Detach battery ribbon cable/reattach battery ribbon cable\n"
+				+ "Unscrew right half of motherboard/Rescrew right half of motherboard\n"
+				+ "Desodder chip A503/Sodder new chip A503";
+		setDisassemble(dis);	
 	}
 	
 	/**
@@ -84,49 +97,6 @@ public class Ticket {
 		}
 	}
 
-	/**
-	 * Inserts a ticket into the database
-	 */
-	public void insertTicket() {
-		DBInfo db = new DBInfo();
-		String SQL = "INSERT INTO tickets(DeviceName, FirstName, LastName, Date, Problem, Disassemble) " + "VALUES(?,?,?,?,?,?)";
-		
-		try {
-			Connection conn = db.connect();
-			PreparedStatement pstmt = conn.prepareStatement(SQL);
-			
-			pstmt.setString(1, getdName());
-			pstmt.setString(2, getfName());
-			pstmt.setString(3, getlName());
-			pstmt.setDate  (4, Date.valueOf(getCreation()));
-			pstmt.setString(5, getProblem());
-			pstmt.setString(6, disassembleToDatabase());
-			
-			pstmt.executeUpdate();
-		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
-		}
-
-	}
-	
-	/**
-	 * Deletes a ticket from the database
-	 */
-	public void deleteTicket() {
-		DBInfo db = new DBInfo();
-		String SQL = "DELETE FROM tickets WHERE (id = ?)";
-		
-		try {
-			Connection conn = db.connect();
-			PreparedStatement pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, Integer.toString(getId()));
-			
-			pstmt.executeUpdate();
-			
-		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
-		}
-	}
 
 	/**
 	 * Represents disassembling one more component by popping disassemble component into reassemble stack

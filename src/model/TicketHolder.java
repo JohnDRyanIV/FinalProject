@@ -1,12 +1,8 @@
 package model;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.LinkedList;
 
-import database.DBInfo;
+import database.DBTicket;
 
 /**
  * This class holds Ticket objects. It's where a LinkedList of tickets can be organized
@@ -14,11 +10,14 @@ import database.DBInfo;
  * database of fields compatible with Ticket objects. It is what allows Tickets to be
  * viewed or deleted from the database using the graph in MainFrame.
  * @author John Ryan
+ * 
  */
 public class TicketHolder {
 	
 	// Linked list holding every ticket
 	private LinkedList<Ticket> tickets = new LinkedList<Ticket>();
+	
+	private DBTicket dbTicket = new DBTicket();
 	
 	public int getNumTickets() {
 		return tickets.size();
@@ -167,28 +166,20 @@ public class TicketHolder {
 			tickets.set(i+1, key);
 		}
 	}
+
+	/**
+	 * Clears the LinkedList tickets of all entries
+	 */
+	public void clear() {
+		tickets.clear();
+	}
 	
 	/**
-	 * Populates the LinkedList tickets from a database accessed with a DBInfo object
-	 * @throws SQLException - if DBInfo can't connect to database
+	 * Adds a ticket to the LinkedList tickets
+	 * @param t - ticket to be added
 	 */
-	public void populateFromDB() throws SQLException {
-		tickets.clear(); // clears any preexisting tickets
-		DBInfo db = new DBInfo();
-
-		Connection conn = db.connect();
-		Statement stm;
-		stm = conn.createStatement();
-		String SQL = "SELECT * FROM tickets";
-		ResultSet rst;
-		rst = stm.executeQuery(SQL);
-		while (rst.next()) {
-			Ticket ticket = new Ticket(rst.getInt("id"), rst.getString("DeviceName"), rst.getString("FirstName"), 
-									   rst.getString("LastName"), rst.getDate("Date").toLocalDate(), rst.getString("Problem"), rst.getString("Disassemble"));
-			tickets.add(ticket);
-		}
-
-
+	public void add(Ticket t) {
+		tickets.add(t);
 	}
 	
 	/**
@@ -198,10 +189,23 @@ public class TicketHolder {
 	public void deleteByRow(int row) {
 		for (int i = 0; i < tickets.size(); i++) {
 			if(tickets.get(i).getCurrentRow() == row) {
-				tickets.get(i).deleteTicket();
+				dbTicket.deleteTicket(tickets.get(i));
 				tickets.remove(i);
 			}
 		}
+	}
+	
+	/**
+	 * Deletes Ticket from LinkedList tickets based on index Ticket is contained in
+	 * @param i - index ticket is contained in
+	 */
+	public void deleteByIndex(int i) {
+		dbTicket.deleteTicket(tickets.get(i));
+		tickets.remove(i);
+	}
+	
+	public int getLastIndex() {
+		return tickets.size();
 	}
 	
 	

@@ -25,6 +25,11 @@ import java.sql.SQLException;
 import model.Ticket;
 import model.TicketHolder;
 
+/**
+ * Launches a MainFrame class.
+ * @author John Ryan
+ *
+ */
 public class MainWindow {
 
 	private MainFrame mFrame = new MainFrame();

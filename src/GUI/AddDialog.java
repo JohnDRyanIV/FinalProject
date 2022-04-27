@@ -19,9 +19,17 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import database.DBTicket;
 import inputValidation.TicketValidator;
 import model.Ticket;
 
+/**
+ * Responsible for providing the GUI component to add a Ticket to a
+ * database defined in DBInfo. Involves some input validation so no
+ * empty or invalid Tickets are entered into the database.
+ * @author John Ryan
+ *
+ */
 public class AddDialog extends JDialog {
 	
 	/**
@@ -200,9 +208,10 @@ public class AddDialog extends JDialog {
 		if(!isValidRepairSteps())
 			validInput = false;
 		if(validInput) {	// if every field for ticket is valid, add ticket to database
+			DBTicket dbTicket = new DBTicket();
 			Ticket toAdd = new Ticket(textFields.get(DEVICE_NAME).getText(), textFields.get(FIRST_NAME).getText(), 
 					textFields.get(LAST_NAME).getText(), LocalDate.now(), textFields.get(PROBLEM).getText(), editRepairSteps.getText());
-			toAdd.insertTicket();	// add ticket to database
+			dbTicket.insertTicket(toAdd);	// add ticket to database
 			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
 			

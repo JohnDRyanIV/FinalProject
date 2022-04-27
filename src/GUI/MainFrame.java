@@ -4,21 +4,24 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import database.DBTicketHolder;
 import model.TicketHolder;
-import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
+/**
+ * Allows viewing and deleting of objects using a table as part of a GUI.
+ * @author John Ryan
+ *
+ */
 public class MainFrame extends JFrame {
 
 	/**
@@ -32,6 +35,7 @@ public class MainFrame extends JFrame {
 	private JCheckBox chckbxAscending = new JCheckBox("Ascending");
 	
 	private TicketHolder tHolder = new TicketHolder();
+	private DBTicketHolder dbTicketHolder = new DBTicketHolder();
 
 	/**
 	 * Launch the application.
@@ -58,11 +62,9 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 
-		try {
-			tHolder.populateFromDB();
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+		// Populate the ticket holder object from database
+		tHolder = dbTicketHolder.populateFromDB(tHolder);
+
 		
 		table = new JTable();
 		table.setDefaultEditor(Object.class, null);
@@ -142,7 +144,8 @@ public class MainFrame extends JFrame {
 	}
 	
 	/**
-	 * Populates the table with Ticket objects contained in TicketHolder.
+	 * Populates the table with Ticket objects contained in TicketHolder. Changes order
+	 * depending on if ascending checkbox is selected.
 	 */
 	private void populateTable() { 
 		if(chckbxAscending.isSelected())
@@ -216,7 +219,7 @@ public class MainFrame extends JFrame {
 	private void openAddWindow() throws SQLException {
 		aDialog.setVisible(true);
 		aDialog = new AddDialog();
-		tHolder.populateFromDB();
+		tHolder = dbTicketHolder.populateFromDB(tHolder);
 		repopulateTable();
 
 	}

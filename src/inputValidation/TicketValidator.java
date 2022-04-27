@@ -1,12 +1,9 @@
 package inputValidation;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * This class ensures that no input is invalid. For an input to be invalid, it needs
- * to either be empty, or to contain more characters than the maximum number that
- * can fit in its database field.
+ * This class ensures that no Ticket input is invalid. For an input to be invalid, 
+ * it needs to either be empty, or to contain more characters than the maximum 
+ * number that can fit in its database field.
  * @author John Ryan
  */
 public class TicketValidator {

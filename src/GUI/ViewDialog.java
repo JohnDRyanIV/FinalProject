@@ -6,13 +6,19 @@ import model.Ticket;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
+
 import java.awt.Font;
 import javax.swing.JLabel;
 
+/**
+ * This class allows for the viewing of a Ticket object, including the ability
+ * to visually pop a disassembly or assembly instruction from one stack into 
+ * another
+ * @author John Ryan
+ *
+ */
 public class ViewDialog extends JDialog {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private Ticket ticket = new Ticket();
 	
