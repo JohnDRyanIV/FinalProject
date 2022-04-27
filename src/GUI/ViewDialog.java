@@ -11,7 +11,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 
 /**
- * This class allows for the viewing of a Ticket object, including the ability
+ * Allows for the viewing of a Ticket object, including the ability
  * to visually pop a disassembly or assembly instruction from one stack into 
  * another
  * @author John Ryan
@@ -103,16 +103,6 @@ public class ViewDialog extends JDialog {
 	}
 	
 	/**
-	 * Sets ticket in ViewDialog window before opening window.
-	 * @param ticket - ticket to be passed to ViewDialog
-	 */
-	public void setTicket(Ticket ticket) {
-		this.ticket = ticket;
-		updateTextAreas();
-		setLabels();
-	}
-	
-	/**
 	 * Updates text areas in ViewDialog. Used after popping from one stack to another
 	 */
 	public void updateTextAreas() {
@@ -148,7 +138,21 @@ public class ViewDialog extends JDialog {
 		updateTextAreas();
 	}
 	
+	/**
+	 * Getter for Ticket object in ViewDialog class.
+	 * @return - Ticket object in ViewDialog class.
+	 */
 	public Ticket getTicket() {
 		return this.ticket;
+	}
+	
+	/**
+	 * Sets ticket in ViewDialog window before opening window.
+	 * @param ticket - ticket to be passed to ViewDialog
+	 */
+	public void setTicket(Ticket ticket) {
+		this.ticket = ticket;
+		updateTextAreas();
+		setLabels();
 	}
 }

@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import model.Ticket;
 
 /**
@@ -21,7 +23,8 @@ public class DBTicket {
 	 */
 	public void insertTicket(Ticket t) {
 		DBInfo db = new DBInfo();
-		String SQL = "INSERT INTO tickets(DeviceName, FirstName, LastName, Date, Problem, Disassemble) " + "VALUES(?,?,?,?,?,?)";
+		String SQL =  "INSERT INTO tickets(DeviceName, FirstName, LastName, Date, Problem, Disassemble) " 
+					+ "VALUES(?,?,?,?,?,?)";
 		
 		try {
 			Connection conn = db.connect();
@@ -36,7 +39,9 @@ public class DBTicket {
 			
 			pstmt.executeUpdate();
 		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+			printErrorMessage("The database cannot be accessed. Stack trace has been printed to console.\n " +
+							"If you are seeing this message, please notify your system administrator.");
 		}
 
 	}
@@ -58,9 +63,18 @@ public class DBTicket {
 			pstmt.executeUpdate();
 			
 		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+			printErrorMessage("The database cannot be accessed. Stack trace has been printed to console.\n " +
+					"If you are seeing this message, please notify your system administrator.");
 		}
 	}
 	
-
+	/**
+	 * Prints an error message in a JOptionPane.
+	 * @param error - String of error message to be printed.
+	 */
+	private void printErrorMessage(String error) {
+		JOptionPane.showMessageDialog(null, error);
+	}
+	
 }

@@ -90,9 +90,10 @@ public class Ticket {
 	 * Converts the database String representing disassemble into a java Stack object
 	 * @param disassemble2 - the string to be converted into disassemble stack
 	 */
-	private void setDisassemble(String disassemble2) {
+	public void setDisassemble(String disassemble2) {
+		disassemble.clear();
 		List<String> disassembleList = Arrays.asList(disassemble2.split("\r?\n|\r"));
-		for(int i = disassembleList.size() - 1; i > -1; i--) {
+		for(int i = 0; i < disassembleList.size(); i++) {
 			disassemble.push(disassembleList.get(i));
 		}
 	}
@@ -137,12 +138,15 @@ public class Ticket {
 	public String printDisassembleSteps() {
 		String disString = "";	// String that will be returned: lists every disassembly step remaining
 		String temp = ""; // where string is temporarily held while operations determining what text is output are performed on it
+		@SuppressWarnings("unchecked")
+		Stack<String> tempStack = (Stack<String>) getDisassemble().clone();
 		int indexEnd = -1;	  // index where the disassembly step ends in this string (before "/") - will be determined in for loop
-		for(int i = disassemble.size() - 1; i > -1; i--) {
-			temp = disassemble.elementAt(i);
+		for(int i = 0; i < disassemble.size(); i++) {
+			temp = tempStack.pop();
 			indexEnd = temp.indexOf("/");
 			disString += temp.substring(0, indexEnd) + "\n";
 		}
+		
 		return disString;
 	}
 	
@@ -153,9 +157,11 @@ public class Ticket {
 	public String printReassembleSteps() {
 		String reaString = ""; // string that will be returned: lists every assembly step remaining
 		String temp = ""; // where string is temporarily held while operations determining what text is output are performed on it
+		@SuppressWarnings("unchecked")
+		Stack<String> tempStack = (Stack<String>) getReassemble().clone();
 		int indexStart = -1;	  // index where the assembly step starts in this string (after "/"). Will be determined in for loop
-		for(int i = reassemble.size() - 1; i > -1; i--) {
-			temp = reassemble.elementAt(i);
+		for(int i = 0; i < reassemble.size(); i++) {
+			temp = tempStack.pop();
 			indexStart = temp.indexOf("/") + 1;
 			reaString += temp.substring(indexStart) + "\n";
 		}
@@ -167,7 +173,7 @@ public class Ticket {
 	 */
 	public String disassembleToDatabase() {
 		String disString = ""; // String that will be returned to database-friendly format
-		for(int i = disassemble.size() - 1; i > -1; i--) {
+		for(int i = 0; i < disassemble.size(); i++) {
 			disString += disassemble.elementAt(i) + "\n";
 		}
 		return disString;

@@ -28,7 +28,7 @@ import model.TicketHolder;
 /**
  * Launches a MainFrame class.
  * @author John Ryan
- *
+ * 
  */
 public class MainWindow {
 

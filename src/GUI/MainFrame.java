@@ -18,7 +18,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
 /**
- * Allows viewing and deleting of objects using a table as part of a GUI.
+ * Allows viewing and deleting of Ticket objects using a table as part of a GUI.
  * @author John Ryan
  *
  */
