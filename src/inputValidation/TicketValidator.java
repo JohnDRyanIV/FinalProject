@@ -1,5 +1,7 @@
 package inputValidation;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * This class ensures that no Ticket input is invalid. For an input to be invalid, 
  * it needs to either be empty, or to contain more characters than the maximum 
@@ -85,8 +87,15 @@ public class TicketValidator {
 	 * @return - true if valid, false if invalid
 	 */
 	public boolean isValidRepairSteps(String repairSteps) {
+
 		if(repairSteps.length() > REPAIR_STEPS_MAXLENGTH || repairSteps.length() < REPAIR_STEPS_MINLENGTH)
 			return false;
+		String[] parts = repairSteps.split("\n");
+		for(int i = 0; i < parts.length; i++) {
+			if(!parts[i].contains("/"))
+				return false;
+		}
+
 		return true;
 	}
 	

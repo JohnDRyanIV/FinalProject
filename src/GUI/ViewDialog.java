@@ -2,13 +2,15 @@ package GUI;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+
 import model.Ticket;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
 
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 /**
  * Allows for the viewing of a Ticket object, including the ability
@@ -22,8 +24,8 @@ public class ViewDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private Ticket ticket = new Ticket();
 	
-	private JTextArea textAreaDisassemble = new JTextArea();
-	private JTextArea textAreaReassemble = new JTextArea();
+	private JEditorPane viewDisassemble = new JEditorPane();
+	private JEditorPane viewReassemble = new JEditorPane();
 	
 	JLabel lblDeviceName = new JLabel("New label");
 	JLabel lblProblem = new JLabel("New label");
@@ -53,8 +55,12 @@ public class ViewDialog extends JDialog {
 		setBounds(100, 100, 798, 585);
 		getContentPane().setLayout(null);
 		// set text areas so they can't be edited by users
-		textAreaDisassemble.setEditable(false);
-		textAreaReassemble.setEditable(false);
+		
+		final JScrollPane scrollDisassemble = new JScrollPane(viewDisassemble);
+		final JScrollPane scrollReassemble = new JScrollPane(viewReassemble);
+		viewDisassemble.setEditable(false);
+		viewReassemble.setEditable(false);
+
 		
 		JButton btnIncrementDisassemble = new JButton("\u2192");
 		btnIncrementDisassemble.setFont(new Font("Tahoma", Font.PLAIN, 30));
@@ -76,13 +82,13 @@ public class ViewDialog extends JDialog {
 		btnIncrementReassemble.setBounds(345, 154, 89, 58);
 		getContentPane().add(btnIncrementReassemble);
 		
-		textAreaDisassemble.setBounds(10, 75, 328, 143);
-		// JScrollPane scrollDisassemble = new JScrollPane(textAreaDisassemble);
-		getContentPane().add(textAreaDisassemble);
+		scrollDisassemble.setBounds(10, 75, 328, 143);
+		// JScrollPane scrollDisassemble = new JScrollPane(viewDisassemble);
+		getContentPane().add(scrollDisassemble);
 		
-		textAreaReassemble.setBounds(444, 75, 328, 143);
-		// JScrollPane scrollReassemble = new JScrollPane(textAreaReassemble);
-		getContentPane().add(textAreaReassemble);
+		scrollReassemble.setBounds(444, 75, 328, 143);
+		// JScrollPane scrollReassemble = new JScrollPane(viewReassemble);
+		getContentPane().add(scrollReassemble);
 		
 		
 		lblDeviceName.setBounds(10, 11, 328, 14);
@@ -105,11 +111,13 @@ public class ViewDialog extends JDialog {
 	/**
 	 * Updates text areas in ViewDialog. Used after popping from one stack to another
 	 */
-	public void updateTextAreas() {
-		textAreaDisassemble.setText(ticket.printDisassembleSteps());
+	public void updateviews() {
+		viewDisassemble.setText(ticket.printDisassembleSteps());
 		System.out.println(ticket.getDisassemble().toString());
-		textAreaReassemble.setText(ticket.printReassembleSteps());
+		viewReassemble.setText(ticket.printReassembleSteps());
 		System.out.println(ticket.getReassemble().toString());
+		viewReassemble.setCaretPosition(0);
+		viewDisassemble.setCaretPosition(0);
 	}
 	
 	/**
@@ -127,7 +135,7 @@ public class ViewDialog extends JDialog {
 	 */
 	public void incrementDisassemble() {
 		ticket.incrementDisassemble();
-		updateTextAreas();
+		updateviews();
 	}
 	
 	/**
@@ -135,7 +143,7 @@ public class ViewDialog extends JDialog {
 	 */
 	public void incrementReassemble() {
 		ticket.incrementReassemble();
-		updateTextAreas();
+		updateviews();
 	}
 	
 	/**
@@ -153,7 +161,7 @@ public class ViewDialog extends JDialog {
 	public void setTicket(Ticket ticket) {
 		this.ticket = null;
 		this.ticket = ticket;
-		updateTextAreas();
+		updateviews();
 		setLabels();
 	}
 }

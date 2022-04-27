@@ -65,17 +65,22 @@ public class TicketTest {
 		assertTrue(actual);
 	}
 	
-	/*@Test
-	void testPrintReassembleSteps() {
+	
+	void testIncrementDisassemble() {
 		//ARRANGE
-		
+		Ticket t = new Ticket();
+		int disSize = t.getDisassemble().size();
+		int reaSize = t.getReassemble().size();
+		boolean actual;
 		//ACT
-		
+		t.incrementDisassemble();
+		actual = (disSize > t.getDisassemble().size() && reaSize < t.getReassemble().size());
 		//ASSERT
+		assertTrue(actual);
 	}
 	
-	/*@Test
-	void testPrintReassembleSteps() {
+	@Test
+	void testIncrementReassemble() {
 		//ARRANGE
 		
 		//ACT
