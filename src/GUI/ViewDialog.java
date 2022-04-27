@@ -151,6 +151,7 @@ public class ViewDialog extends JDialog {
 	 * @param ticket - ticket to be passed to ViewDialog
 	 */
 	public void setTicket(Ticket ticket) {
+		this.ticket = null;
 		this.ticket = ticket;
 		updateTextAreas();
 		setLabels();

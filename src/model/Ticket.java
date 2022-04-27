@@ -39,10 +39,10 @@ public class Ticket {
 		setCreation(LocalDate.of(2020, 5, 15));
 		setProblem("Laptop won't boot");
 		String dis = 
-				  "Unscrew back/Rescrew back\n"
-				+ "Detach battery ribbon cable/reattach battery ribbon cable\n"
-				+ "Unscrew right half of motherboard/Rescrew right half of motherboard\n"
-				+ "Desodder chip A503/Sodder new chip A503";
+				  "Desodder chip A503/Sodder new chip A503\n"
+				+ "Unscrew right half of motherboard/Rescrew right daughterboard\n"
+				+ "Detach battery ribbon cable/Reattach battery ribbon cable\n"
+				+ "Unscrew back/Rescrew back";
 		setDisassemble(dis);	
 	}
 	
@@ -146,7 +146,7 @@ public class Ticket {
 			indexEnd = temp.indexOf("/");
 			disString += temp.substring(0, indexEnd) + "\n";
 		}
-		
+		tempStack = null; // garbage collection
 		return disString;
 	}
 	
@@ -165,6 +165,7 @@ public class Ticket {
 			indexStart = temp.indexOf("/") + 1;
 			reaString += temp.substring(indexStart) + "\n";
 		}
+		tempStack = null; // garbage collection
 		return reaString;
 	}
 	
@@ -173,9 +174,12 @@ public class Ticket {
 	 */
 	public String disassembleToDatabase() {
 		String disString = ""; // String that will be returned to database-friendly format
+		@SuppressWarnings("unchecked")
+		Stack<String> tempStack = (Stack<String>) getDisassemble().clone();
 		for(int i = 0; i < disassemble.size(); i++) {
-			disString += disassemble.elementAt(i) + "\n";
+			disString += tempStack.pop() + "\n";
 		}
+		tempStack = null;	// garbage collection
 		return disString;
 
 	}

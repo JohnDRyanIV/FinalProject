@@ -25,16 +25,136 @@ public class TicketTest {
 				+ "line2/line2\n");
 		s.push("line1/line1");
 		s.push("line2/line2");
-		System.out.println(s.toString());
-		System.out.println(t.getDisassemble().toString());
-		System.out.println(s.pop());
-		System.out.println(t.getDisassemble().pop());
 		// ACT
 		actual = s.equals(t.getDisassemble());
 		// ASSERT
 		assertTrue(actual);
 	}
 	
+	@Test
+	void testPrintDisassembleSteps() {
+		//ARRANGE
+		Ticket t = new Ticket();
+		String expected = 
+				  "Unscrew back\n"
+				+ "Detach battery ribbon cable\n"
+				+ "Unscrew right half of motherboard\n"
+				+ "Desodder chip A503\n";
+		boolean actual;
+		//ACT
+		actual = expected.equals(t.printDisassembleSteps());
+		//ASSERT
+		assertTrue(actual);
+	}
+	
+	@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		Ticket t = new Ticket();
+		String expected = 
+				  "Sodder new chip A503\n"
+				+ "Rescrew right daughterboard\n"
+				+ "Reattach battery ribbon cable\n"
+				+ "Rescrew back\n";
+		boolean actual;
+		//ACT
+		while(t.getDisassemble().size() > 0)
+			t.incrementDisassemble();
+		actual = expected.equals(t.printReassembleSteps());
+		//ASSERT
+		assertTrue(actual);
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	
+	/*@Test
+	void testPrintReassembleSteps() {
+		//ARRANGE
+		
+		//ACT
+		
+		//ASSERT
+	}
+	*/
 	
 
 }

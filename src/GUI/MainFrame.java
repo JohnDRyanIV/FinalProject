@@ -231,7 +231,7 @@ public class MainFrame extends JFrame {
 		if(!table.getSelectionModel().isSelectionEmpty()) { // if any row on the table is selected
 			vDialog.setTicket(tHolder.getTicket(getCurrentRow()));
 			vDialog.setVisible(true);
-			vDialog = new ViewDialog();
+			vDialog.invalidate();
 		}
 
 	}
