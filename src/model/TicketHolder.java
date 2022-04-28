@@ -183,19 +183,6 @@ public class TicketHolder {
 	}
 	
 	/**
-	 * Deletes Ticket from LinkedList tickets based on row variable of a Ticket
-	 * @param row - row variable of a Ticket.
-	 */
-	public void deleteByRow(int row) {
-		for (int i = 0; i < tickets.size(); i++) {
-			if(tickets.get(i).getCurrentRow() == row) {
-				dbTicket.deleteTicket(tickets.get(i));
-				tickets.remove(i);
-			}
-		}
-	}
-	
-	/**
 	 * Deletes Ticket from LinkedList tickets based on index Ticket is contained in
 	 * @param i - index ticket is contained in
 	 */

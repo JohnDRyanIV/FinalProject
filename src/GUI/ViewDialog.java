@@ -52,14 +52,12 @@ public class ViewDialog extends JDialog {
 		super();
 		setModal(true);
 		this.setTitle("Viewing Ticket");
-		setBounds(100, 100, 798, 585);
+		setBounds(100, 100, 798, 311);
 		getContentPane().setLayout(null);
 		// set text areas so they can't be edited by users
 		
-		final JScrollPane scrollDisassemble = new JScrollPane(viewDisassemble);
-		final JScrollPane scrollReassemble = new JScrollPane(viewReassemble);
-		viewDisassemble.setEditable(false);
-		viewReassemble.setEditable(false);
+		final JScrollPane scrollDisassemble = new JScrollPane();
+		final JScrollPane scrollReassemble = new JScrollPane();
 
 		
 		JButton btnIncrementDisassemble = new JButton("\u2192");
@@ -69,7 +67,7 @@ public class ViewDialog extends JDialog {
 				incrementDisassemble();
 			}
 		});
-		btnIncrementDisassemble.setBounds(345, 83, 89, 58);
+		btnIncrementDisassemble.setBounds(345, 20, 89, 58);
 		getContentPane().add(btnIncrementDisassemble);
 		
 		JButton btnIncrementReassemble = new JButton("\u2190");
@@ -79,31 +77,35 @@ public class ViewDialog extends JDialog {
 				incrementReassemble();
 			}
 		});
-		btnIncrementReassemble.setBounds(345, 154, 89, 58);
+		btnIncrementReassemble.setBounds(345, 89, 89, 58);
 		getContentPane().add(btnIncrementReassemble);
 		
-		scrollDisassemble.setBounds(10, 75, 328, 143);
+		scrollDisassemble.setBounds(10, 11, 328, 143);
 		// JScrollPane scrollDisassemble = new JScrollPane(viewDisassemble);
 		getContentPane().add(scrollDisassemble);
+		scrollDisassemble.setViewportView(viewDisassemble);
+		viewDisassemble.setEditable(false);
 		
-		scrollReassemble.setBounds(444, 75, 328, 143);
+		scrollReassemble.setBounds(443, 11, 328, 143);
 		// JScrollPane scrollReassemble = new JScrollPane(viewReassemble);
 		getContentPane().add(scrollReassemble);
+		scrollReassemble.setViewportView(viewReassemble);
+		viewReassemble.setEditable(false);
 		
 		
-		lblDeviceName.setBounds(10, 11, 328, 14);
+		lblDeviceName.setBounds(10, 165, 328, 14);
 		getContentPane().add(lblDeviceName);
 		
 		
-		lblProblem.setBounds(10, 36, 328, 14);
+		lblProblem.setBounds(10, 190, 328, 14);
 		getContentPane().add(lblProblem);
 		
 
-		lblName.setBounds(444, 11, 328, 14);
+		lblName.setBounds(10, 215, 328, 14);
 		getContentPane().add(lblName);
 		
 
-		lblDate.setBounds(444, 36, 328, 14);
+		lblDate.setBounds(10, 240, 328, 14);
 		getContentPane().add(lblDate);
 		
 	}

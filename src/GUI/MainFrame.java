@@ -178,7 +178,7 @@ public class MainFrame extends JFrame {
 	 */
 	private void deleteTicket() {
 		System.out.println(getCurrentRow());
-		tHolder.deleteByRow(getCurrentRow());
+		tHolder.deleteByIndex(getCurrentRow());
 		repopulateTable();
 	}
 	

@@ -39,8 +39,8 @@ public class Ticket {
 		setCreation(LocalDate.of(2020, 5, 15));
 		setProblem("Laptop won't boot");
 		String dis = 
-				  "Desodder chip A503/Sodder new chip A503\n"
-				+ "Unscrew right half of motherboard/Rescrew right daughterboard\n"
+				  "Desolder chip A503/Solder new chip A503\n"
+				+ "Unscrew right daughterboard/Rescrew right daughterboard\n"
 				+ "Detach battery ribbon cable/Reattach battery ribbon cable\n"
 				+ "Unscrew back/Rescrew back";
 		setDisassemble(dis);	
@@ -179,6 +179,7 @@ public class Ticket {
 		for(int i = 0; i < disassemble.size(); i++) {
 			disString += tempStack.pop() + "\n";
 		}
+		System.out.println(disString);
 		tempStack = null;	// garbage collection
 		return disString;
 

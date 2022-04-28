@@ -38,7 +38,7 @@ public class TicketTest {
 		String expected = 
 				  "Unscrew back\n"
 				+ "Detach battery ribbon cable\n"
-				+ "Unscrew right half of motherboard\n"
+				+ "Unscrew right daughterboard\n"
 				+ "Desodder chip A503\n";
 		boolean actual;
 		//ACT
@@ -82,84 +82,50 @@ public class TicketTest {
 	@Test
 	void testIncrementReassemble() {
 		//ARRANGE
-		
+		Ticket t = new Ticket();
+		int disSize;
+		int reaSize;
+		boolean actual;
 		//ACT
-		
+		while(t.getDisassemble().size() > 0)
+			t.incrementDisassemble();
+		disSize = t.getDisassemble().size();
+		reaSize = t.getReassemble().size();
+		t.incrementReassemble();
+		actual = (disSize < t.getDisassemble().size() && reaSize > t.getReassemble().size());
 		//ASSERT
+		assertTrue(actual);
 	}
 	
-	/*@Test
-	void testPrintReassembleSteps() {
+	@Test
+	void testGraphOutput() {
 		//ARRANGE
-		
+		Ticket t = new Ticket();
+		String[] expected = {"Dylan", "Thomas", "2020-05-15", "Acer G450 Predator", "Laptop won't boot"};
+		boolean actual = true;
 		//ACT
-		
+		for(int i = 0; i < expected.length; i++) {
+			if(!expected[i].equals(t.graphOutput(0)[i]))
+				actual = false;
+		}
 		//ASSERT
+		assertTrue(actual);
 	}
 	
-	/*@Test
-	void testPrintReassembleSteps() {
+	@Test
+	void testDisassembleToDatabase() {
 		//ARRANGE
-		
+		Ticket t = new Ticket();
+		String expected = 
+				  "Unscrew back/Rescrew back\n"
+				+ "Detach battery ribbon cable/Reattach battery ribbon cable\n"
+			    + "Unscrew right daughterboard/Rescrew right daughterboard\n"
+				+ "Desolder chip A503/Solder new chip A503\n";
+		boolean actual;
 		//ACT
-		
+		actual = expected.equals(t.disassembleToDatabase());
 		//ASSERT
+		assertTrue(actual);
 	}
 	
-	/*@Test
-	void testPrintReassembleSteps() {
-		//ARRANGE
-		
-		//ACT
-		
-		//ASSERT
-	}
-	
-	/*@Test
-	void testPrintReassembleSteps() {
-		//ARRANGE
-		
-		//ACT
-		
-		//ASSERT
-	}
-	
-	/*@Test
-	void testPrintReassembleSteps() {
-		//ARRANGE
-		
-		//ACT
-		
-		//ASSERT
-	}
-	
-	/*@Test
-	void testPrintReassembleSteps() {
-		//ARRANGE
-		
-		//ACT
-		
-		//ASSERT
-	}
-	
-	/*@Test
-	void testPrintReassembleSteps() {
-		//ARRANGE
-		
-		//ACT
-		
-		//ASSERT
-	}
-	
-	/*@Test
-	void testPrintReassembleSteps() {
-		//ARRANGE
-		
-		//ACT
-		
-		//ASSERT
-	}
-	*/
-	
-
 }
