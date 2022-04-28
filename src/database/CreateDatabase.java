@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 public class CreateDatabase {
 	
+	/// IMPORTANT !!!! IMPORTANT !!!! IMPORTANT !!!! IMPORTANT ///
 	//////////////////////////////////////////////////////////////
 	// YOU MUST EDIT DBINFO FOR YOUR OWN SETUP FOR THIS TO WORK //
 	//////////////////////////////////////////////////////////////

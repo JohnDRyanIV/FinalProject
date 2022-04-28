@@ -1,7 +1,5 @@
 package inputValidation;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * This class ensures that no Ticket input is invalid. For an input to be invalid, 
  * it needs to either be empty, or to contain more characters than the maximum 

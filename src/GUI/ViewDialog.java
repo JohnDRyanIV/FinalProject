@@ -31,6 +31,9 @@ public class ViewDialog extends JDialog {
 	JLabel lblProblem = new JLabel("New label");
 	JLabel lblName = new JLabel("New label");
 	JLabel lblDate = new JLabel("New label");
+	
+	JButton btnIncrementDisassemble = new JButton("\u2192");
+	JButton btnIncrementReassemble = new JButton("\u2190");
 
 	/**
 	 * Launch the application.
@@ -52,61 +55,68 @@ public class ViewDialog extends JDialog {
 		super();
 		setModal(true);
 		this.setTitle("Viewing Ticket");
-		setBounds(100, 100, 798, 311);
+		setBounds(100, 100, 798, 322);
 		getContentPane().setLayout(null);
 		// set text areas so they can't be edited by users
 		
 		final JScrollPane scrollDisassemble = new JScrollPane();
 		final JScrollPane scrollReassemble = new JScrollPane();
 
-		
-		JButton btnIncrementDisassemble = new JButton("\u2192");
 		btnIncrementDisassemble.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		btnIncrementDisassemble.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				incrementDisassemble();
 			}
 		});
-		btnIncrementDisassemble.setBounds(345, 20, 89, 58);
+		btnIncrementDisassemble.setBounds(346, 33, 89, 58);
 		getContentPane().add(btnIncrementDisassemble);
 		
-		JButton btnIncrementReassemble = new JButton("\u2190");
 		btnIncrementReassemble.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		btnIncrementReassemble.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				incrementReassemble();
 			}
 		});
-		btnIncrementReassemble.setBounds(345, 89, 89, 58);
+		btnIncrementReassemble.setBounds(346, 103, 89, 58);
 		getContentPane().add(btnIncrementReassemble);
 		
-		scrollDisassemble.setBounds(10, 11, 328, 143);
+		scrollDisassemble.setBounds(8, 26, 328, 143);
 		// JScrollPane scrollDisassemble = new JScrollPane(viewDisassemble);
 		getContentPane().add(scrollDisassemble);
 		scrollDisassemble.setViewportView(viewDisassemble);
 		viewDisassemble.setEditable(false);
 		
-		scrollReassemble.setBounds(443, 11, 328, 143);
+		scrollReassemble.setBounds(445, 26, 328, 143);
 		// JScrollPane scrollReassemble = new JScrollPane(viewReassemble);
 		getContentPane().add(scrollReassemble);
 		scrollReassemble.setViewportView(viewReassemble);
 		viewReassemble.setEditable(false);
 		
 		
-		lblDeviceName.setBounds(10, 165, 328, 14);
+		lblDeviceName.setBounds(8, 180, 764, 14);
 		getContentPane().add(lblDeviceName);
 		
 		
-		lblProblem.setBounds(10, 190, 328, 14);
+		lblProblem.setBounds(8, 205, 764, 14);
 		getContentPane().add(lblProblem);
 		
 
-		lblName.setBounds(10, 215, 328, 14);
+		lblName.setBounds(8, 230, 764, 14);
 		getContentPane().add(lblName);
 		
 
-		lblDate.setBounds(10, 240, 328, 14);
+		lblDate.setBounds(8, 255, 764, 14);
 		getContentPane().add(lblDate);
+		
+		JLabel lblDisassemblySteps = new JLabel("Disassembly Steps");
+		lblDisassemblySteps.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblDisassemblySteps.setBounds(10, 5, 326, 19);
+		getContentPane().add(lblDisassemblySteps);
+		
+		JLabel lblReassemblySteps = new JLabel("Reassembly Steps");
+		lblReassemblySteps.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblReassemblySteps.setBounds(445, 5, 326, 19);
+		getContentPane().add(lblReassemblySteps);
 		
 	}
 	
@@ -115,11 +125,25 @@ public class ViewDialog extends JDialog {
 	 */
 	public void updateviews() {
 		viewDisassemble.setText(ticket.printDisassembleSteps());
-		System.out.println(ticket.getDisassemble().toString());
 		viewReassemble.setText(ticket.printReassembleSteps());
-		System.out.println(ticket.getReassemble().toString());
 		viewReassemble.setCaretPosition(0);
 		viewDisassemble.setCaretPosition(0);
+		updateButtons();
+	}
+	
+	/**
+	 * Updates the buttons in ViewDialog. If the disassembly or reassembly lists are empty,
+	 * it will ensure that the associated button cannot be pressed.
+	 */
+	public void updateButtons()  {
+		if(ticket.getReassemble().isEmpty()) // if there are no reassembly steps
+			btnIncrementReassemble.setEnabled(false);
+		else
+			btnIncrementReassemble.setEnabled(true);
+		if(ticket.getDisassemble().isEmpty())  // if there are no disassembly steps
+			btnIncrementDisassemble.setEnabled(false);
+		else
+			btnIncrementDisassemble.setEnabled(true);
 	}
 	
 	/**
@@ -161,9 +185,10 @@ public class ViewDialog extends JDialog {
 	 * @param ticket - ticket to be passed to ViewDialog
 	 */
 	public void setTicket(Ticket ticket) {
-		this.ticket = null;
 		this.ticket = ticket;
+		ticket.resetStacks(); // reset stacks in case window was exited and reopened
 		updateviews();
 		setLabels();
+		updateButtons();
 	}
 }

@@ -28,14 +28,13 @@ public class MainFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private AddDialog aDialog = new AddDialog();
-	private ViewDialog vDialog = new ViewDialog();
+
 	private JTable table;
 	private DefaultTableModel dTable;
 	private JCheckBox chckbxAscending = new JCheckBox("Ascending");
 	
-	private TicketHolder tHolder = new TicketHolder();
-	private DBTicketHolder dbTicketHolder = new DBTicketHolder();
+	private TicketHolder tHolder = new TicketHolder();	// Holds ticket objects to be output to table
+	private DBTicketHolder dbTicketHolder = new DBTicketHolder(); // Interfaces tHolder with database
 
 	/**
 	 * Launch the application.
@@ -125,7 +124,7 @@ public class MainFrame extends JFrame {
 		getContentPane().add(chckbxAscending);
 		
 		String[] comboOptions = {"Organize by...", "Device", "Problem", "First Name", "Last Name", "Date"};
-		JComboBox comboBoxOrganize = new JComboBox(comboOptions);
+		JComboBox<String> comboBoxOrganize = new JComboBox<String>(comboOptions);
 		comboBoxOrganize.addItemListener(this::comboBoxItemStateChanged);
 		comboBoxOrganize.setBounds(957, 113, 127, 22);
 		getContentPane().add(comboBoxOrganize);
@@ -170,14 +169,12 @@ public class MainFrame extends JFrame {
 	private void repopulateTable() {
 		resetTable();
 		populateTable();
-		System.out.println(tHolder.toString());
 	}
 	
 	/**
 	 * deletes Ticket in currently selected row from both database and TicketHolder.
 	 */
 	private void deleteTicket() {
-		System.out.println(getCurrentRow());
 		tHolder.deleteByIndex(getCurrentRow());
 		repopulateTable();
 	}
@@ -213,10 +210,11 @@ public class MainFrame extends JFrame {
 	}
 	
 	/**
-	 * opens window to add tickets then resets add window
+	 * opens window to add tickets
 	 * @throws SQLException - If tickets window can't connect to database
 	 */
 	private void openAddWindow() throws SQLException {
+		AddDialog aDialog = new AddDialog();
 		aDialog.setVisible(true);
 		aDialog = new AddDialog();
 		tHolder = dbTicketHolder.populateFromDB(tHolder);
@@ -225,13 +223,13 @@ public class MainFrame extends JFrame {
 	}
 	
 	/**
-	 * opens window to view tickets then resets view window
+	 * opens window to view tickets
 	 */
 	private void openViewWindow() {
+		ViewDialog vDialog = new ViewDialog();
 		if(!table.getSelectionModel().isSelectionEmpty()) { // if any row on the table is selected
 			vDialog.setTicket(tHolder.getTicket(getCurrentRow()));
 			vDialog.setVisible(true);
-			vDialog.invalidate();
 		}
 
 	}

@@ -179,10 +179,18 @@ public class Ticket {
 		for(int i = 0; i < disassemble.size(); i++) {
 			disString += tempStack.pop() + "\n";
 		}
-		System.out.println(disString);
 		tempStack = null;	// garbage collection
 		return disString;
 
+	}
+	
+	/**
+	 * Resets the disassemble and reassemble stacks to their default state. Used for when
+	 * exiting and reentering a ViewDialog
+	 */
+	public void resetStacks() {
+		while(!reassemble.isEmpty())
+			incrementReassemble();
 	}
 	
 	// Getters - Setters
