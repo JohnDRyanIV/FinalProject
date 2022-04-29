@@ -6,12 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class CreateDatabase {
+public class CreateTable {
 	
-	/// IMPORTANT !!!! IMPORTANT !!!! IMPORTANT !!!! IMPORTANT ///
-	//////////////////////////////////////////////////////////////
-	// YOU MUST EDIT DBINFO FOR YOUR OWN SETUP FOR THIS TO WORK //
-	//////////////////////////////////////////////////////////////
+	///// IMPORTANT !!!! IMPORTANT !!!! IMPORTANT !!!! IMPORTANT !!!! IMPORTANT /////
+	/////////////////////////////////////////////////////////////////////////////////
+	// YOU MUST EDIT DBINFO CONNECTION STRING FOR YOUR OWN SETUP FOR THIS TO WORK ///
+	/////////////////////////////////////////////////////////////////////////////////
 	static DBInfo db = new DBInfo();
 	
 	public static void main(String[] args) {

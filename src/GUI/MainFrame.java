@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import database.DBTicketHolder;
@@ -35,6 +36,9 @@ public class MainFrame extends JFrame {
 	
 	private TicketHolder tHolder = new TicketHolder();	// Holds ticket objects to be output to table
 	private DBTicketHolder dbTicketHolder = new DBTicketHolder(); // Interfaces tHolder with database
+	
+	private JButton btnDelete = new JButton("Delete Ticket");	// button that deletes currently selected ticket
+	private JButton btnView = new JButton("View Ticket"); // button that views currently selected ticket
 
 	/**
 	 * Launch the application.
@@ -67,6 +71,15 @@ public class MainFrame extends JFrame {
 		
 		table = new JTable();
 		table.setDefaultEditor(Object.class, null);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mousePressed(java.awt.event.MouseEvent evt) {
+				updateButtonsEnable();
+			}
+		});
+		
+
 		final JScrollPane scrollTable = new JScrollPane(table);
 		scrollTable.setBounds(10, 11, 937, 587);
 		getContentPane().add(scrollTable);
@@ -84,11 +97,9 @@ public class MainFrame extends JFrame {
 		JButton btnAdd = new JButton("Add Ticket");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO: Open Add Ticket Frame & update table after frame is filled out
 				try {
 					openAddWindow();
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -96,16 +107,16 @@ public class MainFrame extends JFrame {
 		btnAdd.setBounds(957, 11, 127, 23);
 		getContentPane().add(btnAdd);
 		
-		JButton btnDelete = new JButton("Delete Ticket");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deleteTicket();
+				updateButtonsDisable();
 			}
 		});
 		btnDelete.setBounds(957, 45, 127, 23);
 		getContentPane().add(btnDelete);
 		
-		JButton btnView = new JButton("View Ticket");
+
 		btnView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openViewWindow();
@@ -113,6 +124,9 @@ public class MainFrame extends JFrame {
 		});
 		btnView.setBounds(957, 79, 127, 23);
 		getContentPane().add(btnView);
+		
+		btnDelete.setEnabled(false);
+		btnView.setEnabled(false);
 		
 		chckbxAscending.setBounds(971, 142, 97, 23);
 		chckbxAscending.addActionListener(new ActionListener() {
@@ -124,7 +138,7 @@ public class MainFrame extends JFrame {
 		getContentPane().add(chckbxAscending);
 		
 		String[] comboOptions = {"Organize by...", "Device", "Problem", "First Name", "Last Name", "Date"};
-		JComboBox<String> comboBoxOrganize = new JComboBox<String>(comboOptions);
+		JComboBox comboBoxOrganize = new JComboBox(comboOptions);
 		comboBoxOrganize.addItemListener(this::comboBoxItemStateChanged);
 		comboBoxOrganize.setBounds(957, 113, 127, 22);
 		getContentPane().add(comboBoxOrganize);
@@ -232,5 +246,22 @@ public class MainFrame extends JFrame {
 			vDialog.setVisible(true);
 		}
 
+	}
+	
+	/**
+	 * enables the delete and view buttons. This is to prevent the user from selecting them before an element on the table is selected
+	 */
+	private void updateButtonsEnable() {
+		btnDelete.setEnabled(true);
+		btnView.setEnabled(true);
+	}
+	
+	/**
+	 * disables the delete and view buttons. This is to prevent the user from pressing a button again after an element on the
+	 * table has been deleted and before a new element has been selected
+	 */
+	private void updateButtonsDisable() {
+		btnDelete.setEnabled(false);
+		btnView.setEnabled(false);
 	}
 }
