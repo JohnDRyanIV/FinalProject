@@ -49,7 +49,6 @@ public class DBTicketHolder {
 				th.add(ticket);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			printErrorMessage("The database cannot be accessed. Stack trace has been printed to console.\n " +
 					"If you are seeing this message, please notify your system administrator.");

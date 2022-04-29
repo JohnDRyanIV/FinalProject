@@ -11,10 +11,15 @@ import javax.swing.JOptionPane;
  * @author John Ryan
  *
  */
+
+///// IMPORTANT !!!! IMPORTANT !!!! IMPORTANT !!!! IMPORTANT !!!! IMPORTANT /////
+/////////////////////////////////////////////////////////////////////////////////
+// YOU MUST EDIT DBINFO CONNECTION STRINGS FOR YOUR OWN SETUP FOR THIS TO WORK //
+/////////////////////////////////////////////////////////////////////////////////
 public class DBInfo {
-	private final String url = "jdbc:mysql://localhost:3306/DSFinal"; // DATABASE URL
-	private final String user = "root";
-	private final String password = "chocolate430";
+	private final String url = "Your database URL"; // DATABASE URL
+	private final String user = "Your Username";
+	private final String password = "Your Password";
 	
 	/**
 	 * @return - url of database
@@ -45,7 +50,6 @@ public class DBInfo {
 		try {
 			return DriverManager.getConnection(url, user, password);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			printErrorMessage("The database cannot be accessed. Stack trace has been printed to console.\n " +
 					"If you are seeing this message, please notify your system administrator.");

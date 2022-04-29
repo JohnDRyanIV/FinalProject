@@ -1,3 +1,13 @@
 Final Project for Data Structures Class
 
-// PROJECT DESCRIPTION //
+///// IMPORTANT /////
+When cloning this repository to your local machine, make sure you modify 
+the DBInfo class so that it can interface with your database. It's 
+currently set up to interface with my own database on my machine.
+
+This program allows for the viewing of Ticket objects pertaining to
+computer repair in a table. These table entries can be selected to be
+either deleted or viewed, and new Ticket objects can be added through
+pressing the Add Ticket button on the Main Window of this program. These
+Ticket objects are populated into a LinkedList of type Ticket from a
+database defined in DBInfo upon program start.
